@@ -24,7 +24,6 @@ public class Snake implements Iterable<GridCell<Character>> {
 
     }
 
-    
     public Snake ShiftedBy(int deltaRow, int deltaCol) {
         CellPosition newHeadPos = new CellPosition(getHeadPos().row() + deltaRow, getHeadPos().col() + deltaCol);
         return new Snake(symbol,newHeadPos);
@@ -49,7 +48,6 @@ public class Snake implements Iterable<GridCell<Character>> {
 
     //get the snake position, list over the positions to the snake segments 
     public CellPosition getHeadPos() {
-        ;
         return body.getFirst().pos();
     }
 
@@ -99,15 +97,6 @@ public class Snake implements Iterable<GridCell<Character>> {
     }
 
     /**
-     * Returns the position of the player on the game board.
-     *
-     * @return The position of the player on the game board.
-     */
-    //public CellPosition getCellPosition() {
-        //return this.headPos;
-    //}
-
-    /**
      * Returns the symbol that represents the player on the game board.
      *
      * @return The symbol that represents the player on the game board.
@@ -126,16 +115,6 @@ public class Snake implements Iterable<GridCell<Character>> {
     public void setCharToPlayer(char value) {
         this.symbol = value;
     }
-
-    /**
-     * Sets the position of the player on the game board to a given position.
-     *
-     * @param position The new position to set the player to.
-     */
-   // public void playerMovedTo(CellPosition position) {
-        //this.headPos = position;
-    //}
-
 
   
     
