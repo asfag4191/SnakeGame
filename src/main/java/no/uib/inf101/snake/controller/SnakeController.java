@@ -25,12 +25,14 @@ public class SnakeController implements KeyListener, ActionListener {
     private final ControlleableSnake snakeModel;
     private final SnakeView snakeView;
     private final Timer timer;
+    private MainMenu mainMenu;
 
 
 
     public SnakeController(ControlleableSnake controller, SnakeView view) {
         this.snakeModel = controller; // Use the 'controller' parameter
-        this.snakeView = view; // Use the 'view' parameter
+        this.snakeView = view;
+        this.mainMenu=mainMenu; // Use the 'view' parameter
         snakeView.addKeyListener(this);
         snakeView.setFocusable(true);
         this.timer = new Timer(snakeModel.delayTimer(), this::clockTick);
@@ -42,6 +44,7 @@ public class SnakeController implements KeyListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
     }
+    
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -124,8 +127,17 @@ public class SnakeController implements KeyListener, ActionListener {
                 System.exit(0);
                 break;
             
+            case KeyEvent.VK_M:
+                showMainMenu();
+                break;
+            
         }
         snakeView.repaint();
+    }
+
+//SJEKK
+    private void showMainMenu() {
+    
     }
 
     public void handlePause(KeyEvent e) {

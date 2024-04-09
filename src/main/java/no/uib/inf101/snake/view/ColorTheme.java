@@ -7,8 +7,6 @@ import java.awt.Color;
  */
 public interface ColorTheme {
 
-    //Color menuFont = null;
-
     /**
      * Gets the color associated with the given cell content character.
      * 
@@ -18,18 +16,19 @@ public interface ColorTheme {
     Color getCellColor(char Cellcontent);
 
     /**
-     * Returns the color of the frame.
      * 
      * @return the color of the frame.
      */
     Color getFrameColor();
 
     /**
-     * Returns the backgorund color.
      * 
      * @return the backgorund color .
      */
     Color getBackgroundColor();
 
+    /**
+     * @return the color of the menu font.
+     */
     Color getMenuFont();
 }

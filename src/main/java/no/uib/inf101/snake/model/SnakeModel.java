@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import no.uib.inf101.grid.CellPosition;
 import no.uib.inf101.grid.GridCell;
@@ -18,31 +20,82 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     private SnakeBoard snakeBoard;
     private Snake snake;
     private GameState gameState = GameState.START_GAME;
-    //private GameState gameState = GameState.ACTIVE_GAME;
     private Random random = new Random();
     private Direction direction;
     private int newscore;
-    // private Direction direction;
-    // public LinkedList<GridCell
     private Item item;
 
+    private boolean hardMode = false;
+    private Timer obstacleTimer;
+
     public SnakeModel(SnakeBoard snakeBoard, Snake snake) {
-        // if (snakeBoard == null || Snake == null){
-        // throw new IllegalArgumentException("SnakeBoard and Snake can't be null");
-        // }
         this.snakeBoard = snakeBoard;
-        //this.gameState = GameState.ACTIVE_GAME;
         this.snake = snake;
-        //his.gameState = GameState.ACTIVE_GAME;
-        this.direction=direction.NORTH;//start
+        this.direction = direction.NORTH;// start
         GenerateApple('A');
-        // this.gameState = GameState.WELCOME_SCREEN;
-
-        // 4this.currentSnake = new Snake(new CellPosition(midRow, midCol));
-
     }
 
-    // need to make something here to chech if the move is legal
+    public void setGameMode(GameState gameState) {
+        switch (gameState) {
+            case NORMAL_MODE_SELECTED:
+                hardMode = false;
+                break;
+            case HARD_MODE_SELECTED:
+                hardMode = true;
+                initHardModeFeatures();
+                break;
+            default:
+                // Handle other states
+        }
+    }
+
+    @Override
+    public int obstacleTimer() {
+        return 200;
+
+}
+    
+private void initHardModeFeatures() {
+    obstacleTimer = new Timer();
+    obstacleTimer.scheduleAtFixedRate(new TimerTask() {
+        @Override
+        public void run() {
+            updateObstacles();
+        }
+    }, 0, 2000);
+}
+
+private void updateObstacles() {
+    removeObstacles();
+    createObstacles();
+}
+
+private void removeObstacles() {
+    for (int row = 0; row < snakeBoard.rows(); row++) {
+        for (int col = 0; col < snakeBoard.cols(); col++) {
+            if (snakeBoard.get(new CellPosition(row, col)) == 'O') {
+                snakeBoard.set(new CellPosition(row, col), '-');
+            }
+        }
+    }
+}
+
+private void createObstacles() {
+    for (int i = 0; i < 5; i++) {
+        int row = random.nextInt(snakeBoard.rows());
+        int col = random.nextInt(snakeBoard.cols());
+        CellPosition position = new CellPosition(row, col);
+
+        // Sørg for at hindringene ikke overlapper med slangen eller hverandre
+        while (snakeBoard.get(position) != '-' || snake.getSnake().contains(position)) {
+            row = random.nextInt(snakeBoard.rows());
+            col = random.nextInt(snakeBoard.cols());
+            position = new CellPosition(row, col);
+        }
+        snakeBoard.set(position, 'O');
+    }
+}
+
 
     @Override
     public GridDimension getDimension() {
@@ -66,14 +119,8 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
 
     @Override
     public void clockTick() {
-        //if (gameState == GameState.ACTIVE_GAME) {
-            moveSnake(this.direction);
-        
-            // attachSnaketoBoard();
-        }
-
-
-  
+        moveSnake(this.direction);
+    }
 
     public void setDirection(Direction direction) {
         this.direction = direction;
@@ -81,7 +128,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
 
     @Override
     public void startGame() {
-        newscore=0;
+        newscore = 0;
     }
 
     @Override
@@ -91,29 +138,42 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
             for (int col = 0; col < snakeBoard.cols(); col++) {
                 snakeBoard.set(new CellPosition(row, col), '-');
             }
-        newscore = 0;
-       CellPosition startPosition = new CellPosition( 10,10);
-        snake = new Snake('S', startPosition);
-        snakeBoard.set(new CellPosition(5, 10), 'A');
-        this.direction=direction.NORTH;
-        // Set the game state to active or whatever the initial state should be
-        
-        this.gameState = GameState.ACTIVE_GAME;
+            newscore = 0;
+            CellPosition startPosition = new CellPosition(10, 10);
+            snake = new Snake('S', startPosition);
+            snakeBoard.set(new CellPosition(5, 10), 'A');
+            this.direction = direction.NORTH;
+            // Set the game state to active
+
+            this.gameState = GameState.ACTIVE_GAME;
         }
     }
 
     @Override
-    public int delayTimer() {
-        return 180;
+public int delayTimer() {
+    if (newscore < 100) {
+        return 180; 
+    } else if (newscore < 200) {  
+        return 150; 
+    } else if (newscore < 250) {  
+        return 120; 
+    } else {
+        return 90; 
     }
+}
+
     public void increaseScore() {
-        this.newscore += 10; // Assuming each apple is worth 10 points, adjust as necessary
+        this.newscore += 10;
     }
+
     private boolean legalMove(Direction direction) {
         CellPosition headPos = this.snake.getHeadPos();
         CellPosition newPos = direction.move(headPos);
 
         if (!this.snakeBoard.positionIsOnGrid(newPos)) {
+            return false;
+        }
+        if (this.snakeBoard.get(newPos) == 'O') {
             return false;
         }
 
@@ -132,50 +192,36 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         }
         CellPosition newPos = direction.move(this.snake.getHeadPos());
         if (this.snakeBoard.get(newPos) == 'A') {
-            this.snakeBoard.set(newPos,'-'); 
+            this.snakeBoard.set(newPos, '-');
             this.snake.grow(newPos);
             GenerateApple('A');
             increaseScore();
-            System.out.println("Score: " + getscore() + " points");
+            //System.out.println("Score: " + getscore() + " points");
         } else {
             this.snakeBoard.set(this.snake.getTailPos(), '-');
             this.snake.move(direction);
-            //direction=this.direction;
         }
-       
+
         this.snakeBoard.set(this.snake.getHeadPos(), 'S');
-      
+
     }
 
-   
-    // happens when the snake can't be moved anymore
-    private void attachSnaketoBoard() {
-        for (GridCell<Character> cell : this.snake) {
-            snakeBoard.set(cell.pos(), cell.value());
-        }
-    }
-    public void GenerateApple(char c){
+    public void GenerateApple(char c) {
         int row = random.nextInt(snakeBoard.rows());
         int col = random.nextInt(snakeBoard.cols());
         CellPosition applePosition = new CellPosition(row, col);
 
-        //generate a new position if the apple is not placed on a empty tile
+        // generate a new position if the apple is not placed on a empty tile
         while (!snakeBoard.get(applePosition).equals('-')) {
             row = random.nextInt(snakeBoard.rows());
             col = random.nextInt(snakeBoard.cols());
             applePosition = new CellPosition(row, col);
         }
-        Item apple=new Item('A', applePosition);
-        this.item=apple;
+        Item apple = new Item('A', applePosition);
+        this.item = apple;
         snakeBoard.set(applePosition, c);
-
-
-
     }
-    //public void mainMenu(){
-        //this.gameState=GameState.MAIN_MENU;
 
-    
     @Override
     public int getscore() {
         return this.newscore;
@@ -190,5 +236,14 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     public CellPosition getHeadPos() {
         return this.snake.getHeadPos();
     }
-}
 
+    public SnakeBoard getBoard() {
+        return snakeBoard;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+
+}

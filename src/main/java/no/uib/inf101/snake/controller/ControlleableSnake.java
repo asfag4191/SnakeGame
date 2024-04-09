@@ -1,21 +1,14 @@
 package no.uib.inf101.snake.controller;
 
-
-
-
 import no.uib.inf101.snake.model.Direction;
 import no.uib.inf101.snake.model.GameState;
 
 /**
  * The interface defines the methods that the controller
- * components of the Tetris game needs in order to control the current state of
+ * components of the Snake game needs in order to control the current state of
  * the game.
- * Managing moving, rotating, dropping the tetrominos and
- * the game timing and controlling the game state.
  */
 public interface ControlleableSnake {
-
-
 
     /**
      * Advances the internal clock by one tick.
@@ -40,32 +33,30 @@ public interface ControlleableSnake {
      */
     public void resetGame();
 
-
     /**
-     * @param direction
+     * 
+     * @param direction The direction in which to move the snake.
      */
     public void moveSnake(Direction direction);
 
-
     /**
-     * @return
+     * 
+     * @return The delay time between each clock tick.
      */
     public int delayTimer();
 
-
     /**
-     * Sets the direction of the snake.
      * 
-     * @param direction
+     * @param direction Sets the direction of the snake.
      */
     public void setDirection(Direction direction);
 
     /**
-     * Sets the game screen.
      * 
-     * @param gameScreen
+     * @param gameScreen The Gamestate to set the gamesreen to. 
      */
     public void setGameScreen(GameState gameScreen);
-    
+
+    public int obstacleTimer();
+
 }
-    

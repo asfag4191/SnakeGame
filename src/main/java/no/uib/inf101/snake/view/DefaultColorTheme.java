@@ -20,7 +20,8 @@ public class DefaultColorTheme implements ColorTheme {
             case 'A' -> boardColor;
             case '-' -> boardColor;
             case 'B' -> snakeHead;
-            
+            case 'O' -> frameColor;
+
             default -> throw new IllegalArgumentException(
                     "No available color for '" + Cellcontent + "-");
         };
@@ -43,4 +44,3 @@ public class DefaultColorTheme implements ColorTheme {
     }
 
 }
-

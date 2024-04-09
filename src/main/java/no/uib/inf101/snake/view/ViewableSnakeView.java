@@ -7,30 +7,34 @@ import no.uib.inf101.snake.model.GameState;
 
 public interface ViewableSnakeView {
 
-    GameState getGameState();
+  /**
+   * @return the current game state.
+   */
+  GameState getGameState();
 
-    /**
-     * @return the dimension of the game board.
-     */
-    GridDimension getDimension();
+  /**
+   * @return the dimension of the game board.
+   */
+  GridDimension getDimension();
 
-    /**
-     * @return the tiles on the game board.
-     */
-    Iterable<GridCell<Character>> getTilesOnBoard();
+  /**
+   * @return the tiles on the game board.
+   */
+  Iterable<GridCell<Character>> getTilesOnBoard();
 
-    /**
-     * 
-     * @return the tiles of the snake on the game board.
-     */
-    Iterable<GridCell<Character>> getSnake();
+  /**
+   * 
+   * @return the tiles of the snake on the game board.
+   */
+  Iterable<GridCell<Character>> getSnake();
 
-      /**
-     * @return the current score, from removing full rows.
-     */
-    int getscore();
+  /**
+   * @return the current score, from removing full rows.
+   */
+  int getscore();
 
-
-    CellPosition getHeadPos();
+  /**
+   * @return the position of the head of the snake.
+   */
+  CellPosition getHeadPos();
 }
-

@@ -16,5 +16,9 @@ public enum GameState {
     /**
      *
      */
-    GAME_OVER
+    GAME_OVER, 
+
+    NORMAL_MODE_SELECTED,
+
+    HARD_MODE_SELECTED,
 }
