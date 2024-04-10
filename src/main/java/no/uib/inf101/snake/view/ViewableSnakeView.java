@@ -37,4 +37,5 @@ public interface ViewableSnakeView {
    * @return the position of the head of the snake.
    */
   CellPosition getHeadPos();
+
 }

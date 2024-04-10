@@ -29,6 +29,7 @@ public class SnakeView extends JPanel {
     private ColorTheme colorTheme;
     private static final int INNERMARGIN = 2;
     private static final int OUTERMARGIN = 2;
+    private JFrame mainFrame;
 
     public SnakeView(ViewableSnakeView snakeModel) {
         setPreferredSize(new Dimension(800, 600));
@@ -60,8 +61,9 @@ public class SnakeView extends JPanel {
     }
 
     public JFrame getFrame() {
-        JFrame frame = new JFrame("SNAKE GAME");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        if (mainFrame == null) {
+            mainFrame = new JFrame("SNAKE GAME");
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Create a new panel with BoxLayout for the menu or additional content
         JPanel panel = new JPanel();
@@ -79,27 +81,38 @@ public class SnakeView extends JPanel {
                 + "move right: ⮕" + "<br>"
                 + "pause: [P]" + "<br>"
                 + "restart: [SPACE]" + "<br>"
-                +"quit game: [Q]" + "</html>");
+                +"quit game: [Q]" + "<br>"
+                +"Main Menu: [M]"+ "</html>");
+                
         keys.setFont(new Font("Arial", Font.PLAIN, 18));
         // keys.setForeground(ColorTheme.menuFont);
         keys.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         // You can add more components to the panel here
 
         // Add the game view (this panel) to the center of the frame
-        frame.add(this, BorderLayout.CENTER);
+        mainFrame.add(this, BorderLayout.CENTER);
 
         // Add the menu (panel) to the right of the frame
-        frame.add(panel, BorderLayout.EAST);
+        mainFrame.add(panel, BorderLayout.EAST);
 
         panel.add(keys);
 
-        frame.pack(); // Adjusts frame to fit the preferred size and layouts of its subcomponents
-        frame.setLocationRelativeTo(null); // Centers the frame on the screen
-        frame.setVisible(true); // Makes the frame visible
+        mainFrame.pack(); // Adjusts frame to fit the preferred size and layouts of its subcomponents
+        mainFrame.setLocationRelativeTo(null); // Centers the frame on the screen
+        mainFrame.setVisible(true); // Makes the frame visible
 
-        return frame;
+    
     }
+        return mainFrame;
+}
 
+    /**
+     * Close the JFrame
+     */
+    public void closeWindow() {
+        mainFrame.setVisible(false);
+    }
+    
     private void drawGame(Graphics2D g2) {
         double margin = 0; // rammetykkelse
         double x = INNERMARGIN;
@@ -133,6 +146,7 @@ public class SnakeView extends JPanel {
 
         ImageIcon appleSymbol = new ImageIcon(Inf101Graphics.loadImageFromResources("/apple.png"));
         ImageIcon snakeSymbol = new ImageIcon(Inf101Graphics.loadImageFromResources("/green-circle.png"));
+        ImageIcon bombSymbol = new ImageIcon(Inf101Graphics.loadImageFromResources("/bomb.png"));
 
         for (GridCell<Character> cell : cells) {
             Rectangle2D cellBounds = converter.getBoundsForCell(cell.pos());
@@ -160,6 +174,12 @@ public class SnakeView extends JPanel {
                         (int) cellBounds.getY() + inset,
                         (int) cellBounds.getWidth() - 2 * inset,
                         (int) cellBounds.getHeight() - 2 * inset, null);
+            }
+            else if (cell.value()=='O'){
+                g2.drawImage(bombSymbol.getImage(), (int) cellBounds.getX(), (int) cellBounds.getY(),
+                        (int) cellBounds.getWidth(),
+                        (int) cellBounds.getHeight(), null);
+
             }
         }
     }
@@ -260,4 +280,7 @@ public class SnakeView extends JPanel {
         Inf101Graphics.drawCenteredString(g2, "Press 'SPACE' to resume", overlayX, textYStart + lineHeight, overlayWidth, lineHeight);
         Inf101Graphics.drawCenteredString(g2, "Your score is: " + snakeModel.getscore(), overlayX, textYStart + 2 * lineHeight, overlayWidth, lineHeight);
     }
+
+
 }
+

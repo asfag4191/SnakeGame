@@ -24,9 +24,11 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     private Direction direction;
     private int newscore;
     private Item item;
+    private Timer timer;
 
     private boolean hardMode = false;
     private Timer obstacleTimer;
+    private Timer appleTimer;
 
     public SnakeModel(SnakeBoard snakeBoard, Snake snake) {
         this.snakeBoard = snakeBoard;
@@ -34,6 +36,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         this.direction = direction.NORTH;// start
         GenerateApple('A');
     }
+    
 
     public void setGameMode(GameState gameState) {
         switch (gameState) {
@@ -42,10 +45,10 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
                 break;
             case HARD_MODE_SELECTED:
                 hardMode = true;
-                initHardModeFeatures();
+                ObstacleFeatures();
+                PoisonousAppleMode();
                 break;
             default:
-                // Handle other states
         }
     }
 
@@ -53,49 +56,49 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     public int obstacleTimer() {
         return 200;
 
-}
-    
-private void initHardModeFeatures() {
-    obstacleTimer = new Timer();
-    obstacleTimer.scheduleAtFixedRate(new TimerTask() {
-        @Override
-        public void run() {
-            updateObstacles();
-        }
-    }, 0, 2000);
-}
+    }
 
-private void updateObstacles() {
-    removeObstacles();
-    createObstacles();
-}
+    private void ObstacleFeatures() {
+        obstacleTimer = new Timer();
+        obstacleTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                updateObstacles();
+                // updatePoisonusApple();
+            }
+        }, 0, 2000);
+    }
 
-private void removeObstacles() {
-    for (int row = 0; row < snakeBoard.rows(); row++) {
-        for (int col = 0; col < snakeBoard.cols(); col++) {
-            if (snakeBoard.get(new CellPosition(row, col)) == 'O') {
-                snakeBoard.set(new CellPosition(row, col), '-');
+    private void updateObstacles() {
+        removeObstacles();
+        createObstacles();
+    }
+
+    private void removeObstacles() {
+        for (int row = 0; row < snakeBoard.rows(); row++) {
+            for (int col = 0; col < snakeBoard.cols(); col++) {
+                if (snakeBoard.get(new CellPosition(row, col)) == 'O') {
+                    snakeBoard.set(new CellPosition(row, col), '-');
+                }
             }
         }
     }
-}
 
-private void createObstacles() {
-    for (int i = 0; i < 5; i++) {
-        int row = random.nextInt(snakeBoard.rows());
-        int col = random.nextInt(snakeBoard.cols());
-        CellPosition position = new CellPosition(row, col);
+    private void createObstacles() {
+        for (int i = 0; i < 5; i++) {
+            int row = random.nextInt(snakeBoard.rows());
+            int col = random.nextInt(snakeBoard.cols());
+            CellPosition position = new CellPosition(row, col);
 
-        // Sørg for at hindringene ikke overlapper med slangen eller hverandre
-        while (snakeBoard.get(position) != '-' || snake.getSnake().contains(position)) {
-            row = random.nextInt(snakeBoard.rows());
-            col = random.nextInt(snakeBoard.cols());
-            position = new CellPosition(row, col);
+            // Sørg for at hindringene ikke overlapper med slangen eller hverandre
+            while (snakeBoard.get(position) != '-' || snake.getSnake().contains(position)) {
+                row = random.nextInt(snakeBoard.rows());
+                col = random.nextInt(snakeBoard.cols());
+                position = new CellPosition(row, col);
+            }
+            snakeBoard.set(position, 'O');
         }
-        snakeBoard.set(position, 'O');
     }
-}
-
 
     @Override
     public GridDimension getDimension() {
@@ -134,33 +137,34 @@ private void createObstacles() {
     @Override
     public void resetGame() {
         // Clear the board
-        for (int row = 0; row < snakeBoard.rows(); row++) {
-            for (int col = 0; col < snakeBoard.cols(); col++) {
-                snakeBoard.set(new CellPosition(row, col), '-');
-            }
-            newscore = 0;
-            CellPosition startPosition = new CellPosition(10, 10);
-            snake = new Snake('S', startPosition);
-            snakeBoard.set(new CellPosition(5, 10), 'A');
-            this.direction = direction.NORTH;
-            // Set the game state to active
-
-            this.gameState = GameState.ACTIVE_GAME;
+        snakeBoard.clearBoard();
+        newscore = 0;
+        CellPosition startPosition = new CellPosition(10, 10);
+        snake = new Snake('S', startPosition);
+        snakeBoard.set(new CellPosition(5, 10), 'A');
+        this.direction = direction.NORTH;
+        if (hardMode) {
+            setGameMode(GameState.HARD_MODE_SELECTED);
+        } else {
+            setGameMode(GameState.NORMAL_MODE_SELECTED);
         }
+
+        // Start spillet
+        this.gameState = GameState.ACTIVE_GAME;
     }
 
     @Override
-public int delayTimer() {
-    if (newscore < 100) {
-        return 180; 
-    } else if (newscore < 200) {  
-        return 150; 
-    } else if (newscore < 250) {  
-        return 120; 
-    } else {
-        return 90; 
+    public int delayTimer() {
+        if (newscore < 80) {
+            return 180;
+        } else if (newscore < 110) {
+            return 120;
+        } else if (newscore < 150) {
+            return 120;
+        } else {
+            return 90;
+        }
     }
-}
 
     public void increaseScore() {
         this.newscore += 10;
@@ -180,14 +184,28 @@ public int delayTimer() {
         if (this.snakeBoard.get(newPos) == 'S') {
             return false;
         }
+        if (this.snakeBoard.get(newPos) == 'P') {
+            return true;
+        }
 
         return true;
+    }
+    private void stopTimers() {
+        if (obstacleTimer != null) {
+            obstacleTimer.cancel();
+            obstacleTimer = null;
+        }
+        if (appleTimer != null) {
+            appleTimer.cancel();
+            appleTimer = null;
+        }
     }
 
     @Override
     public void moveSnake(Direction direction) {
         if (!legalMove(direction)) {
             this.gameState = GameState.GAME_OVER;
+            stopTimers();
             return;
         }
         CellPosition newPos = direction.move(this.snake.getHeadPos());
@@ -196,7 +214,13 @@ public int delayTimer() {
             this.snake.grow(newPos);
             GenerateApple('A');
             increaseScore();
-            //System.out.println("Score: " + getscore() + " points");
+        }  else if (this.snakeBoard.get(newPos) == 'P') {
+            this.snakeBoard.set(newPos, '-');
+            this.snakeBoard.set(this.snake.getTailPos(), '-'); //removes the tail from the board
+            this.snake.move(direction); // Flytt slangen
+            GeneratePoisonousApple('P');
+            increaseScore();
+            increaseScore();
         } else {
             this.snakeBoard.set(this.snake.getTailPos(), '-');
             this.snake.move(direction);
@@ -205,6 +229,8 @@ public int delayTimer() {
         this.snakeBoard.set(this.snake.getHeadPos(), 'S');
 
     }
+
+    
 
     public void GenerateApple(char c) {
         int row = random.nextInt(snakeBoard.rows());
@@ -245,5 +271,52 @@ public int delayTimer() {
         return item;
     }
 
+    private void PoisonousAppleMode() {
+        appleTimer = new Timer();
+        appleTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                updatePoisonusApple();
+            }
+        }, 0, 3000);
+    }
+
+    public void updatePoisonusApple() {
+        removePoisonpusApple();
+        GeneratePoisonousApple('P');
+
+    }
+
+    private void removePoisonpusApple() {
+        for (int row = 0; row < snakeBoard.rows(); row++) {
+            for (int col = 0; col < snakeBoard.cols(); col++) {
+                if (snakeBoard.get(new CellPosition(row, col)) == 'P') {
+                    snakeBoard.set(new CellPosition(row, col), '-');
+                }
+            }
+        }
+    }
+
+    public void GeneratePoisonousApple(char c) {
+        int row = random.nextInt(snakeBoard.rows());
+        int col = random.nextInt(snakeBoard.cols());
+        CellPosition applePPosition = new CellPosition(row, col);
+
+        // generate a new position if the apple is not placed on a empty tile
+        while (!snakeBoard.get(applePPosition).equals('-')) {
+            row = random.nextInt(snakeBoard.rows());
+            col = random.nextInt(snakeBoard.cols());
+            applePPosition = new CellPosition(row, col);
+        }
+        Item appleP = new Item('P', applePPosition);
+        this.item = appleP;
+        snakeBoard.set(applePPosition, c);
+    }
+
+    // Improved version of temporarilyIncreasePace
+   // private void temporarilyIncreasePace() {
+      
+   // }
 
 }
+

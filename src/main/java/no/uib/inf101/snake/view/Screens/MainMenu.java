@@ -31,11 +31,11 @@ public class MainMenu extends JFrame implements ActionListener {
 
 	private final JButton playNormal;
 	private final JButton playHard;
-	private final JFrame frame;
+	//private final JFrame frame;
 
 	public MainMenu() {
-		frame = new JFrame();
-		frame.setTitle("Welcome to Snake!");
+		///frame = new JFrame();
+		this.setTitle("Welcome to Snake!");
 
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -72,12 +72,12 @@ public class MainMenu extends JFrame implements ActionListener {
 
 		contentPane.add(imageLabel);
 
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(contentPane);
-		frame.setPreferredSize(new Dimension(800, 600));
-		frame.pack();
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.add(contentPane);
+		this.setPreferredSize(new Dimension(800, 600));
+		this.pack();
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
 	}
 
 	/**
@@ -107,15 +107,17 @@ public class MainMenu extends JFrame implements ActionListener {
 		}
 	}
 
+
+
 	private void startGame(GameState mode) {
-		frame.setVisible(false); // Lukker hovedmenyen
+		this.setVisible(false); // Lukker hovedmenyen
 
 		Snake snake = new Snake('S', new CellPosition(10, 10));
 		SnakeBoard board = new SnakeBoard(15, 15);
 		SnakeModel model = new SnakeModel(board, snake);
 		model.setGameMode(mode); // Setter spillets modus basert på brukerens valg
 		SnakeView view = new SnakeView(model);
-		SnakeController controller = new SnakeController(model, view);
+		SnakeController controller = new SnakeController(model, view,this);
 		view.getFrame();
 	}
 

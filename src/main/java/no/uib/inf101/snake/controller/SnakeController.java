@@ -29,10 +29,10 @@ public class SnakeController implements KeyListener, ActionListener {
 
 
 
-    public SnakeController(ControlleableSnake controller, SnakeView view) {
+    public SnakeController(ControlleableSnake controller, SnakeView view, MainMenu mainMenu) {
         this.snakeModel = controller; // Use the 'controller' parameter
         this.snakeView = view;
-        this.mainMenu=mainMenu; // Use the 'view' parameter
+        this.mainMenu = mainMenu;
         snakeView.addKeyListener(this);
         snakeView.setFocusable(true);
         this.timer = new Timer(snakeModel.delayTimer(), this::clockTick);
@@ -59,6 +59,7 @@ public class SnakeController implements KeyListener, ActionListener {
             case GAME_OVER:
                 handleGameOver(e);
                 handleQuit(e);
+                showMainMenu(e);
                 break;
             case PAUSE_GAME:
                 handlePause(e);
@@ -99,6 +100,9 @@ public class SnakeController implements KeyListener, ActionListener {
             case KeyEvent.VK_Q:
                 handleQuit(e);
                 break;
+            case KeyEvent.VK_M:
+                showMainMenu(e);
+                break;
         }
         snakeView.repaint();
     }
@@ -116,29 +120,48 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     public void handleGameOver(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            // Restart
-            case KeyEvent.VK_ENTER:
-                snakeModel.resetGame();
-                break;
-
-            // Quit
-            case KeyEvent.VK_Q:
-                System.exit(0);
-                break;
-            
-            case KeyEvent.VK_M:
-                showMainMenu();
-                break;
-            
+        if (e.getKeyCode()==KeyEvent.VK_ENTER) {
+            snakeModel.resetGame();
+        }
+        else if (e.getKeyCode()==KeyEvent.VK_Q) {
+            System.exit(0);
+        }
+        else if (e.getKeyCode()==KeyEvent.VK_M) {
+            showMainMenu(e);
         }
         snakeView.repaint();
     }
+            // Restart
+            //case KeyEvent.VK_ENTER:
+                //snakeModel.resetGame();
+                //break;
+
+            // Quit
+            //case KeyEvent.VK_Q:
+                //System.exit(0);
+                //break;
+            
+            //case KeyEvent.VK_M:
+                //showMainMenu();
+                //break;
+            
+    //}
+        //snakeView.repaint();
+   // }
 
 //SJEKK
-    private void showMainMenu() {
-    
+private void showMainMenu(KeyEvent e) {
+    if (e.getKeyCode() == KeyEvent.VK_M) {
+        if (mainMenu != null) {
+            mainMenu.setVisible(true); // Viser hovedmenyen
+            snakeView.setVisible(false);
+            snakeView.closeWindow(); // Lukker spillvinduet
+            snakeModel.setGameScreen(GameState.START_GAME);
+        } else {
+            System.out.println("MainMenu er ikke initialisert");
+        }
     }
+}
 
     public void handlePause(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_P) {

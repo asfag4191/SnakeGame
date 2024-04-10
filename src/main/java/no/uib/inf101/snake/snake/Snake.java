@@ -65,6 +65,7 @@ public class Snake implements Iterable<GridCell<Character>> {
         this.body.pollLast();
         this.body.addFirst(cell);
     }
+
 //sjekk denne funksjonen 
 //addFirst()?
     public void grow(CellPosition pos){
