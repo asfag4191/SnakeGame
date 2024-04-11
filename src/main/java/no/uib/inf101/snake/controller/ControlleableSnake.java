@@ -13,7 +13,7 @@ public interface ControlleableSnake {
     /**
      * Advances the internal clock by one tick.
      */
-    public void clockTick();
+    //public void clockTick();
 
     /**
      * Retrieves the current state of the game.
@@ -58,5 +58,15 @@ public interface ControlleableSnake {
     public void setGameScreen(GameState gameScreen);
 
     public int obstacleTimer();
+
+    public int pappleTimer();
+
+    public void clockTickDelay();
+
+    public void clockTickObstacle();
+
+    public void clockTickPapple();
+
+    public boolean isHardMode();
 
 }

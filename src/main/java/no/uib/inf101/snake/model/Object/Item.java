@@ -10,14 +10,28 @@ public class Item {
     public CellPosition cellPosition;
     public Random random = new Random();
 
-    public Item(char character, CellPosition cellPosition) {
+    public Item(char character) {
         this.character = character;
-        this.cellPosition = cellPosition;
         random=new Random();
     }
 
-    public CellPosition getObjectPosition() {
+    public char getCharacter() {
+        return character;
+    }
+
+    public CellPosition generateRandomPosition(Grid<Character> board) {
+        int row;
+        int col;
+        do {
+            row = random.nextInt(board.rows());
+            col = random.nextInt(board.cols());
+            cellPosition = new CellPosition(row, col);
+        } while (board.get(cellPosition) != '-'); // Chech if the position is free
         return cellPosition;
     }
+
+    public void placeOnBoard(Grid<Character> board, char c) {
+        board.set(cellPosition, c);
     
+    }
 }

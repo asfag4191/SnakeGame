@@ -38,4 +38,7 @@ public interface ViewableSnakeView {
    */
   CellPosition getHeadPos();
 
+ 
+
+
 }

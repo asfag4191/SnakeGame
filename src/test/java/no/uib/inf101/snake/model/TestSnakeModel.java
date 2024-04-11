@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.uib.inf101.grid.CellPosition;
+import no.uib.inf101.grid.Grid;
 import no.uib.inf101.snake.model.Direction;
 import no.uib.inf101.snake.model.GameState;
 import no.uib.inf101.snake.model.SnakeBoard;
@@ -12,6 +13,8 @@ import no.uib.inf101.snake.model.Object.Item;
 import no.uib.inf101.snake.snake.Snake;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
 
 public class TestSnakeModel {
 
@@ -66,7 +69,7 @@ public class TestSnakeModel {
         snakeBoard.set(new CellPosition(10, 9), 'S');
     
         snakeModel.setDirection(Direction.NORTH); //Into itself
-        snakeModel.clockTick(); //game updates.
+        //snakeModel.clockTickDelay(); //game updates.
     
         // Check if the game state is GAME_OVER after the move.
         assertEquals(GameState.GAME_OVER, snakeModel.getGameState(), "Game should end after moving into itself");
@@ -106,17 +109,26 @@ public class TestSnakeModel {
     }
 
     @Test
-    public void testApplePlacedOnEmptyTile() {
-        SnakeBoard snakeBoard = new SnakeBoard(20, 20);
-        Snake snake = new Snake('S', new CellPosition(0, 0));
-        SnakeModel snakeModel = new SnakeModel(snakeBoard, snake);
-        
-        snakeModel.GenerateApple('A');
-        Item item =snakeModel.getItem();
-        assertNotEquals(item.getObjectPosition(), new CellPosition(0, 0), "Apple should not be placed on the snake");
-
-    }
+public void testApplePlacedOnEmptyTile() {
+    SnakeBoard snakeBoard = new SnakeBoard(20, 20);
+    Snake snake = new Snake('S', new CellPosition(0, 0));
+    SnakeModel snakeModel = new SnakeModel(snakeBoard, snake);
     
+    // Plasser slangen på brettet
+    snakeBoard.set(new CellPosition(0, 0), 'S');
+    
+    // Generer eplet
+    snakeModel.GenerateApple('A');
+    
+    // Hent posisjonen til eplet fra snakeModel
+    CellPosition applePosition = snakeModel.getApplePosition();
+
+    // Sjekk at eplet ikke er plassert på samme posisjon som slangen
+    char tileContent = snakeBoard.get(applePosition);
+    assertNotEquals( 'S', tileContent);
 }
+
+}
+    
     
 

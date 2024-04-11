@@ -110,13 +110,15 @@ public class MainMenu extends JFrame implements ActionListener {
 
 
 	private void startGame(GameState mode) {
-		this.setVisible(false); // Lukker hovedmenyen
+		//his.setVisible(false); // Lukker hovedmenyen
 
 		Snake snake = new Snake('S', new CellPosition(10, 10));
 		SnakeBoard board = new SnakeBoard(15, 15);
+
 		SnakeModel model = new SnakeModel(board, snake);
 		model.setGameMode(mode); // Setter spillets modus basert på brukerens valg
 		SnakeView view = new SnakeView(model);
+		//model.setView(view);
 		SnakeController controller = new SnakeController(model, view,this);
 		view.getFrame();
 	}

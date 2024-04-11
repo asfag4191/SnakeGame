@@ -147,6 +147,7 @@ public class SnakeView extends JPanel {
         ImageIcon appleSymbol = new ImageIcon(Inf101Graphics.loadImageFromResources("/apple.png"));
         ImageIcon snakeSymbol = new ImageIcon(Inf101Graphics.loadImageFromResources("/green-circle.png"));
         ImageIcon bombSymbol = new ImageIcon(Inf101Graphics.loadImageFromResources("/bomb.png"));
+        ImageIcon headSymbol = new ImageIcon(Inf101Graphics.loadImageFromResources("/snakeHead.png"));
 
         for (GridCell<Character> cell : cells) {
             Rectangle2D cellBounds = converter.getBoundsForCell(cell.pos());
@@ -155,8 +156,9 @@ public class SnakeView extends JPanel {
             g2.fill(cellBounds);
             // Hvis cellen er slangehodet, tegn en spesiell farge og fyll hele cellen
             if (cell.pos().equals(snakeModel.getHeadPos())) {
-                g2.setColor(Color.PINK);
-                g2.fill(cellBounds);
+                g2.drawImage(headSymbol.getImage(), (int) cellBounds.getX(), (int) cellBounds.getY(),
+                        (int) cellBounds.getWidth(),
+                        (int) cellBounds.getHeight(), null);
             }
             // Hvis cellen er en eple, tegn eplebildet
             else if (cell.value() == 'A') {
@@ -168,7 +170,7 @@ public class SnakeView extends JPanel {
             // Hvis cellen er en del av slangen (ikke hodet), tegn slangebildet litt mindre
             // enn hele ruten
             else if (cell.value() == 'S') {
-                int inset = 1; // som over
+                int inset = 2; // som over
                 g2.drawImage(snakeSymbol.getImage(),
                         (int) cellBounds.getX() + inset,
                         (int) cellBounds.getY() + inset,

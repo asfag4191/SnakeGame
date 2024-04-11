@@ -217,23 +217,19 @@ private void showMainMenu(KeyEvent e) {
         }
     }
         
+    public void clockTickObstacle(ActionEvent e) {
+        if (e.getSource() == timerObstacle && snakeModel.getGameState() == GameState.ACTIVE_GAME && snakeModel.isHardMode()) {
+            snakeModel.clockTickObstacle();
+            updateObstacleTimer();
+            snakeView.repaint();
+        }
+    }
     
-
-    //public void clockTickObstacle(ActionEvent e) {
-        //if (e.getSource() == timerObstacle && snakeModel.getGameState() == GameState.ACTIVE_GAME && snakeModel.isHardMode()) {
-            //snakeModel.clockTickObstacle();
-            //updateObstacleTimer();
-            //snakeView.repaint();
-        //}
-    //}
-    
-   // public void clockTickPapple(ActionEvent e) {
-        //if (e.getSource() == timerPapple && snakeModel.getGameState() == GameState.ACTIVE_GAME && snakeModel.isHardMode()) {
-           // snakeModel.clockTickPapple();
-            //updatePappleTimer();
-            //snakeView.repaint();
-        //}
-   // }
-    
-
+    public void clockTickPapple(ActionEvent e) {
+        if (e.getSource() == timerPapple && snakeModel.getGameState() == GameState.ACTIVE_GAME && snakeModel.isHardMode()) {
+            snakeModel.clockTickPapple();
+            updatePappleTimer();
+            snakeView.repaint();
+        }
+    }
 }
