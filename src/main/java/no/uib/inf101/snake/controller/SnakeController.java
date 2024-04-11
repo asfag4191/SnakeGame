@@ -25,6 +25,8 @@ public class SnakeController implements KeyListener, ActionListener {
     private final ControlleableSnake snakeModel;
     private final SnakeView snakeView;
     private final Timer timer;
+    private final Timer timerObstacle;
+    private final Timer timerPapple;
     private MainMenu mainMenu;
 
 
@@ -35,14 +37,23 @@ public class SnakeController implements KeyListener, ActionListener {
         this.mainMenu = mainMenu;
         snakeView.addKeyListener(this);
         snakeView.setFocusable(true);
-        this.timer = new Timer(snakeModel.delayTimer(), this::clockTick);
-        timer.start();
+        this.timer = new Timer(snakeModel.delayTimer(), this::clockTickDelay);
+        this.timerObstacle = new Timer(snakeModel.obstacleTimer(), this::clockTickObstacle);
+        this.timerPapple=new Timer(snakeModel.pappleTimer(), this::clockTickPapple);
+
+        this.timer.start();
+        this.timerObstacle.start();
+        this.timerPapple.start();
+        
 
 
     }
 
+    
+
     @Override
     public void actionPerformed(ActionEvent e) {
+        updateObstacleTimer();
     }
     
 
@@ -181,14 +192,48 @@ private void showMainMenu(KeyEvent e) {
             timer.setInitialDelay(0); //change immediately
         }
     }
-
-    public void clockTick(ActionEvent e) {
-        if (snakeModel.getGameState() == GameState.ACTIVE_GAME) {
-            snakeModel.clockTick();
-            updateTimerDelay();
-            snakeView.repaint();
+    public void updateObstacleTimer(){
+        int newDelay = snakeModel.obstacleTimer();
+        if (timerObstacle.getDelay() != newDelay) {
+            timerObstacle.setDelay(newDelay);
+            timerObstacle.setInitialDelay(0); //change immediately
         }
-
     }
+    public void updatePappleTimer(){
+        int newDelay = snakeModel.pappleTimer();
+        if (timerPapple.getDelay() != newDelay) {
+            timerPapple.setDelay(newDelay);
+            timerPapple.setInitialDelay(0); //change immediately
+        }
+    }
+
+    public void clockTickDelay(ActionEvent e) {
+        if (e.getSource() == timer) {
+            if (snakeModel.getGameState() == GameState.ACTIVE_GAME) {
+                snakeModel.clockTickDelay();
+                updateTimerDelay();
+                snakeView.repaint();
+            }
+        }
+    }
+        
+    
+
+    //public void clockTickObstacle(ActionEvent e) {
+        //if (e.getSource() == timerObstacle && snakeModel.getGameState() == GameState.ACTIVE_GAME && snakeModel.isHardMode()) {
+            //snakeModel.clockTickObstacle();
+            //updateObstacleTimer();
+            //snakeView.repaint();
+        //}
+    //}
+    
+   // public void clockTickPapple(ActionEvent e) {
+        //if (e.getSource() == timerPapple && snakeModel.getGameState() == GameState.ACTIVE_GAME && snakeModel.isHardMode()) {
+           // snakeModel.clockTickPapple();
+            //updatePappleTimer();
+            //snakeView.repaint();
+        //}
+   // }
+    
 
 }
