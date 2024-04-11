@@ -124,9 +124,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         return this.snake;
     }
         
-
-    
-
+    @Override
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
@@ -156,7 +154,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         if (newscore < 100) {
             delay = 200;
         } else if (newscore < 200) {
-            delay = 120;
+            delay = 150;
         } else if (newscore < 250) {
             delay = 120;
         } else {
@@ -223,6 +221,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
             GeneratePoisonousApple('P');
             increaseScore();
             increaseScore();
+            
         } else {
             this.snakeBoard.set(this.snake.getTailPos(), '-');
             this.snake.move(direction);
@@ -290,7 +289,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     }
     @Override 
     public int pappleTimer() {
-        return 1500;
+        return 3000;
     }
 
     public void GeneratePoisonousApple(char c) {

@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-
+import no.uib.inf101.snake.midi.SnakeSong;
 import no.uib.inf101.snake.model.Direction;
 import no.uib.inf101.snake.model.GameState;
 import no.uib.inf101.snake.view.SnakeView;
@@ -28,6 +28,7 @@ public class SnakeController implements KeyListener, ActionListener {
     private final Timer timerObstacle;
     private final Timer timerPapple;
     private MainMenu mainMenu;
+    private SnakeSong snakeSong;
 
 
 
@@ -40,6 +41,7 @@ public class SnakeController implements KeyListener, ActionListener {
         this.timer = new Timer(snakeModel.delayTimer(), this::clockTickDelay);
         this.timerObstacle = new Timer(snakeModel.obstacleTimer(), this::clockTickObstacle);
         this.timerPapple=new Timer(snakeModel.pappleTimer(), this::clockTickPapple);
+        this.snakeSong=new SnakeSong();
 
         this.timer.start();
         this.timerObstacle.start();
@@ -86,6 +88,7 @@ public class SnakeController implements KeyListener, ActionListener {
 
     private void handleStart(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            snakeSong.run();
             snakeModel.setGameScreen(GameState.ACTIVE_GAME);
             snakeView.repaint();
         }
@@ -177,6 +180,7 @@ private void showMainMenu(KeyEvent e) {
     public void handlePause(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_P) {
             snakeModel.setGameScreen(GameState.PAUSE_GAME);
+            snakeSong.doPauseMidiSounds();
             snakeView.repaint();
         }
     }

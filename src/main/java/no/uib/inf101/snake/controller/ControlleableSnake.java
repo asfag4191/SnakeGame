@@ -69,4 +69,6 @@ public interface ControlleableSnake {
 
     public boolean isHardMode();
 
+ 
+
 }
