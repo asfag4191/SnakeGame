@@ -12,7 +12,7 @@ public class Item {
 
     public Item(char character) {
         this.character = character;
-        random=new Random();
+        random = new Random();
     }
 
     public char getCharacter() {
@@ -25,13 +25,23 @@ public class Item {
         do {
             row = random.nextInt(board.rows());
             col = random.nextInt(board.cols());
-            cellPosition = new CellPosition(row, col);
-        } while (board.get(cellPosition) != '-'); // Chech if the position is free
+            cellPosition = new CellPosition(row, col); // Update the cellPosition field
+        } while (board.get(cellPosition) != '-'); // Check if the position is free
         return cellPosition;
     }
 
-    public void placeOnBoard(Grid<Character> board, char c) {
+
+   public void placeOnBoard(Grid<Character> board, char c) {
         board.set(cellPosition, c);
-    
+
     }
+         //int row;
+        //int col;
+       // do {
+            //row = random.nextInt(board.rows());
+            //col = random.nextInt(board.cols());
+            //cellPosition = new CellPosition(row, col);
+        //} while (board.get(cellPosition) != '-'); // Chech if the position is free
+        //return cellPosition;
+    //}
 }

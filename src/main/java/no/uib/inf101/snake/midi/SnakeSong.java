@@ -6,20 +6,20 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequencer;
 
 /**
-
+ * This class is responsible for playing the snake song.
  */
 
 public class SnakeSong implements Runnable {
     private static final String SONG = "snakeSong.mid";
     private Sequencer sequencer;
 
-  
     @Override
     public void run() {
         InputStream snakeSong = SnakeSong.class.getClassLoader().getResourceAsStream(SONG);
         this.doPlayMidi(snakeSong, true);
     }
-        /**
+
+    /**
      * Checks if the song is playing.
      *
      * @return true if the song is playing, false otherwise

@@ -1,13 +1,11 @@
 package no.uib.inf101.snake.controller;
 
-import java.awt.RenderingHints.Key;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import no.uib.inf101.snake.midi.SnakeSong;
@@ -16,10 +14,11 @@ import no.uib.inf101.snake.model.GameState;
 import no.uib.inf101.snake.view.SnakeView;
 import no.uib.inf101.snake.view.Screens.MainMenu;
 
+
 /**
- * This class is responsible for handling user input and updating the model
- * accordingly. It also updates the view.
- * Implements KeyListener and ActionListener
+ * Controller for Snake game, tracking user input and updating the model
+ * accordingly.
+ * Implements KeyListener and ActionListener.
  */
 public class SnakeController implements KeyListener, ActionListener {
     private final ControlleableSnake snakeModel;
@@ -32,40 +31,34 @@ public class SnakeController implements KeyListener, ActionListener {
 
 
 
+    /**
+     * Constructs a SnakeController with the specified parameters.
+     * 
+     * @param controller The snake controller.
+     * @param view       The snake view.
+     * @param mainMenu   The main menu of the game.
+     */
     public SnakeController(ControlleableSnake controller, SnakeView view, MainMenu mainMenu) {
         this.snakeModel = controller; // Use the 'controller' parameter
         this.snakeView = view;
         this.mainMenu = mainMenu;
+
+        this.snakeSong = new SnakeSong();
         snakeView.addKeyListener(this);
         snakeView.setFocusable(true);
+
         this.timer = new Timer(snakeModel.delayTimer(), this::clockTickDelay);
         this.timerObstacle = new Timer(snakeModel.obstacleTimer(), this::clockTickObstacle);
-        this.timerPapple=new Timer(snakeModel.pappleTimer(), this::clockTickPapple);
-        this.snakeSong=new SnakeSong();
+        this.timerPapple = new Timer(snakeModel.pappleTimer(), this::clockTickPapple);
 
         this.timer.start();
         this.timerObstacle.start();
         this.timerPapple.start();
-        
-
-
-    }
-
-    
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        updateObstacleTimer();
-    }
-    
-
-    @Override
-    public void keyTyped(KeyEvent e) {
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (snakeModel.getGameState()) { 
+        switch (snakeModel.getGameState()) {
             case ACTIVE_GAME:
                 handleActive(e);
                 break;
@@ -82,19 +75,17 @@ public class SnakeController implements KeyListener, ActionListener {
             case START_GAME:
                 handleStart(e);
                 break;
+            case HARD_MODE_SELECTED:
+                break;
+            case NORMAL_MODE_SELECTED:
+                break;
+            default:
+                break;
 
         }
     }
 
-    private void handleStart(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            snakeSong.run();
-            snakeModel.setGameScreen(GameState.ACTIVE_GAME);
-            snakeView.repaint();
-        }
-    }
-
-    public void handleActive(KeyEvent e) {
+    private void handleActive(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
                 snakeModel.setDirection(Direction.WEST);
@@ -122,61 +113,68 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     /**
+     * Method for handling the start function.
+     * 
+     * @param e The KeyEvent.
+     */
+    private void handleStart(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            snakeSong.run();
+            snakeModel.setGameScreen(GameState.ACTIVE_GAME);
+            snakeView.repaint();
+        }
+    }
+
+    /**
      * Method for handling the quit function.
      * 
-     * @param e
+     * @param e The KeyEvent.
      */
-    public void handleQuit(KeyEvent e) {
+    private void handleQuit(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_Q) {
             System.exit(0);
         }
         snakeView.repaint();
     }
 
-    public void handleGameOver(KeyEvent e) {
-        if (e.getKeyCode()==KeyEvent.VK_ENTER) {
+    /**
+     * Method for handling the game over function.
+     * 
+     * @param e The KeyEvent.
+     */
+    private void handleGameOver(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             snakeModel.resetGame();
-        }
-        else if (e.getKeyCode()==KeyEvent.VK_Q) {
+        } else if (e.getKeyCode() == KeyEvent.VK_Q) {
             System.exit(0);
-        }
-        else if (e.getKeyCode()==KeyEvent.VK_M) {
+        } else if (e.getKeyCode() == KeyEvent.VK_M) {
             showMainMenu(e);
         }
         snakeView.repaint();
     }
-            // Restart
-            //case KeyEvent.VK_ENTER:
-                //snakeModel.resetGame();
-                //break;
 
-            // Quit
-            //case KeyEvent.VK_Q:
-                //System.exit(0);
-                //break;
-            
-            //case KeyEvent.VK_M:
-                //showMainMenu();
-                //break;
-            
-    //}
-        //snakeView.repaint();
-   // }
-
-//SJEKK
-private void showMainMenu(KeyEvent e) {
-    if (e.getKeyCode() == KeyEvent.VK_M) {
-        if (mainMenu != null) {
-            mainMenu.setVisible(true); // Viser hovedmenyen
-            snakeView.setVisible(false);
-            snakeView.closeWindow(); // Lukker spillvinduet
-            snakeModel.setGameScreen(GameState.START_GAME);
-        } else {
-            System.out.println("MainMenu er ikke initialisert");
+    /**
+     * Method for showing the main menu, and also close the game window.
+     * 
+     * @param e The KeyEvent.
+     */
+    private void showMainMenu(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_M) {
+            if (mainMenu != null) {
+                mainMenu.setVisible(true); // Viser hovedmenyen
+                snakeView.setVisible(false);
+                snakeView.closeWindow(); // Lukker spillvinduet
+                snakeModel.setGameScreen(GameState.START_GAME);
+            }
         }
     }
-}
+    
 
+    /**
+     * Method for handling the pause function. 
+     * 
+     * @param e
+     */
     public void handlePause(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_P) {
             snakeModel.setGameScreen(GameState.PAUSE_GAME);
@@ -184,34 +182,46 @@ private void showMainMenu(KeyEvent e) {
             snakeView.repaint();
         }
     }
-    
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
 
-    public void updateTimerDelay() {
+    /**
+     * Method for updating the timer delay.
+     */
+    private void updateTimerDelay() {
         int newDelay = snakeModel.delayTimer();
         if (timer.getDelay() != newDelay) {
             timer.setDelay(newDelay);
-            timer.setInitialDelay(0); //change immediately
-        }
-    }
-    public void updateObstacleTimer(){
-        int newDelay = snakeModel.obstacleTimer();
-        if (timerObstacle.getDelay() != newDelay) {
-            timerObstacle.setDelay(newDelay);
-            timerObstacle.setInitialDelay(0); //change immediately
-        }
-    }
-    public void updatePappleTimer(){
-        int newDelay = snakeModel.pappleTimer();
-        if (timerPapple.getDelay() != newDelay) {
-            timerPapple.setDelay(newDelay);
-            timerPapple.setInitialDelay(0); //change immediately
+            timer.setInitialDelay(0);
         }
     }
 
-    public void clockTickDelay(ActionEvent e) {
+    /**
+     * Method for updating the obstacle timer.
+     */
+    private void updateObstacleTimer() {
+        int newDelay = snakeModel.obstacleTimer();
+        if (timerObstacle.getDelay() != newDelay) {
+            timerObstacle.setDelay(newDelay);
+            timerObstacle.setInitialDelay(0);
+        }
+    }
+
+    /**
+     * Method for updating the poisonous apple timer.
+     */
+    private void updatePappleTimer() {
+        int newDelay = snakeModel.pappleTimer();
+        if (timerPapple.getDelay() != newDelay) {
+            timerPapple.setDelay(newDelay);
+            timerPapple.setInitialDelay(0);
+        }
+    }
+
+    /**
+     * Method for handling the clock tick delay when the game is active.
+     * 
+     * @param e The ActionEvent.
+     */
+    private void clockTickDelay(ActionEvent e) {
         if (e.getSource() == timer) {
             if (snakeModel.getGameState() == GameState.ACTIVE_GAME) {
                 snakeModel.clockTickDelay();
@@ -220,20 +230,47 @@ private void showMainMenu(KeyEvent e) {
             }
         }
     }
-        
-    public void clockTickObstacle(ActionEvent e) {
-        if (e.getSource() == timerObstacle && snakeModel.getGameState() == GameState.ACTIVE_GAME && snakeModel.isHardMode()) {
+
+    /**
+     * Method for handling the clock tick obstacle when the game is active, and
+     * the hard mode is selected.
+     * 
+     * @param e The ActionEvent.
+     */
+    private void clockTickObstacle(ActionEvent e) {
+        if (e.getSource() == timerObstacle && snakeModel.getGameState() == GameState.ACTIVE_GAME
+                && snakeModel.isHardMode()) {
             snakeModel.clockTickObstacle();
             updateObstacleTimer();
             snakeView.repaint();
         }
     }
-    
-    public void clockTickPapple(ActionEvent e) {
-        if (e.getSource() == timerPapple && snakeModel.getGameState() == GameState.ACTIVE_GAME && snakeModel.isHardMode()) {
+
+    /**
+     * Method for handling the clock tick poisonous apple when the game is active,
+     * and
+     * the hard mode is selected.
+     * 
+     * @param e The ActionEvent.
+     */
+    private void clockTickPapple(ActionEvent e) {
+        if (e.getSource() == timerPapple && snakeModel.getGameState() == GameState.ACTIVE_GAME
+                && snakeModel.isHardMode()) {
             snakeModel.clockTickPapple();
             updatePappleTimer();
             snakeView.repaint();
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }

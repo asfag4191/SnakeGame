@@ -60,59 +60,7 @@ public class SnakeView extends JPanel {
         }
     }
 
-    public JFrame getFrame() {
-        if (mainFrame == null) {
-            mainFrame = new JFrame("SNAKE GAME");
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Create a new panel with BoxLayout for the menu or additional content
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        // Example: Adding some content to the side panel
-        JLabel label = new JLabel("Side Menu");
-        panel.add(label);
-
-        JLabel keys = new JLabel("<html> Key menu:" + "<br>"
-                + "----------------" + "<br>"
-                + "move up: ⬆ " + "<br>"
-                + "move down: ⬇ " + "<br>"
-                + "move left: ⬅ " + "<br>"
-                + "move right: ⮕" + "<br>"
-                + "pause: [P]" + "<br>"
-                + "restart: [SPACE]" + "<br>"
-                +"quit game: [Q]" + "<br>"
-                +"Main Menu: [M]"+ "</html>");
-                
-        keys.setFont(new Font("Arial", Font.PLAIN, 18));
-        // keys.setForeground(ColorTheme.menuFont);
-        keys.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        // You can add more components to the panel here
-
-        // Add the game view (this panel) to the center of the frame
-        mainFrame.add(this, BorderLayout.CENTER);
-
-        // Add the menu (panel) to the right of the frame
-        mainFrame.add(panel, BorderLayout.EAST);
-
-        panel.add(keys);
-
-        mainFrame.pack(); // Adjusts frame to fit the preferred size and layouts of its subcomponents
-        mainFrame.setLocationRelativeTo(null); // Centers the frame on the screen
-        mainFrame.setVisible(true); // Makes the frame visible
-
-    
-    }
-        return mainFrame;
-}
-
-    /**
-     * Close the JFrame
-     */
-    public void closeWindow() {
-        mainFrame.setVisible(false);
-    }
-    
     private void drawGame(Graphics2D g2) {
         double margin = 0; // rammetykkelse
         double x = INNERMARGIN;
@@ -148,6 +96,7 @@ public class SnakeView extends JPanel {
         ImageIcon snakeSymbol = new ImageIcon(Inf101Graphics.loadImageFromResources("/green-circle.png"));
         ImageIcon bombSymbol = new ImageIcon(Inf101Graphics.loadImageFromResources("/bomb.png"));
         ImageIcon headSymbol = new ImageIcon(Inf101Graphics.loadImageFromResources("/snakeHead.png"));
+        ImageIcon goldenSymbol= new ImageIcon(Inf101Graphics.loadImageFromResources("/goldenApple.png"));
 
         for (GridCell<Character> cell : cells) {
             Rectangle2D cellBounds = converter.getBoundsForCell(cell.pos());
@@ -182,6 +131,10 @@ public class SnakeView extends JPanel {
                         (int) cellBounds.getWidth(),
                         (int) cellBounds.getHeight(), null);
 
+            } else if (cell.value()=='P'){
+                g2.drawImage(goldenSymbol.getImage(), (int) cellBounds.getX(), (int) cellBounds.getY(),
+                        (int) cellBounds.getWidth(),
+                        (int) cellBounds.getHeight(), null);
             }
         }
     }
@@ -282,6 +235,61 @@ public class SnakeView extends JPanel {
         Inf101Graphics.drawCenteredString(g2, "Press 'SPACE' to resume", overlayX, textYStart + lineHeight, overlayWidth, lineHeight);
         Inf101Graphics.drawCenteredString(g2, "Your score is: " + snakeModel.getscore(), overlayX, textYStart + 2 * lineHeight, overlayWidth, lineHeight);
     }
+
+    public JFrame getFrame() {
+        if (mainFrame == null) {
+            mainFrame = new JFrame("SNAKE GAME");
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Create a new panel with BoxLayout for the menu or additional content
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        // Example: Adding some content to the side panel
+        JLabel label = new JLabel("Side Menu");
+        panel.add(label);
+
+        JLabel keys = new JLabel("<html> Key menu:" + "<br>"
+                + "----------------" + "<br>"
+                + "move up: ⬆ " + "<br>"
+                + "move down: ⬇ " + "<br>"
+                + "move left: ⬅ " + "<br>"
+                + "move right: ⮕" + "<br>"
+                + "pause: [P]" + "<br>"
+                + "restart: [SPACE]" + "<br>"
+                +"quit game: [Q]" + "<br>"
+                +"Main Menu: [M]"+ "</html>");
+                
+        keys.setFont(new Font("Arial", Font.PLAIN, 18));
+        // keys.setForeground(ColorTheme.menuFont);
+        keys.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        // You can add more components to the panel here
+
+        // Add the game view (this panel) to the center of the frame
+        mainFrame.add(this, BorderLayout.CENTER);
+
+        // Add the menu (panel) to the right of the frame
+        mainFrame.add(panel, BorderLayout.EAST);
+
+        panel.add(keys);
+
+        mainFrame.pack(); // Adjusts frame to fit the preferred size and layouts of its subcomponents
+        mainFrame.setLocationRelativeTo(null); // Centers the frame on the screen
+        mainFrame.setVisible(true); // Makes the frame visible
+
+    
+    }
+        return mainFrame;
+}
+
+
+    /**
+     * Close the JFrame
+     */
+    public void closeWindow() {
+        mainFrame.setVisible(false);
+    }
+    
 
 
 }

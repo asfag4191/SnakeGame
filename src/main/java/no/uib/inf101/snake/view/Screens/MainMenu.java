@@ -13,9 +13,13 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import no.uib.inf101.snake.view.Inf101Graphics;
@@ -31,7 +35,8 @@ public class MainMenu extends JFrame implements ActionListener {
 
 	private final JButton playNormal;
 	private final JButton playHard;
-	//private final JFrame frame;
+	//private final JSlider volumeSlider;
+
 
 	public MainMenu() {
 		///frame = new JFrame();
@@ -53,9 +58,11 @@ public class MainMenu extends JFrame implements ActionListener {
 		playHard = addButton(contentPane, "Start Hard Game");
 		playHard.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+
 		// spacing
 		contentPane.add(Box.createVerticalGlue());
 
+		
 		// image
 		ImageIcon originalIcon = new ImageIcon(Inf101Graphics.loadImageFromResources("/Snake.png"));
 		Image originalImage = originalIcon.getImage();
@@ -78,6 +85,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+	
 	}
 
 	/**
@@ -104,13 +112,15 @@ public class MainMenu extends JFrame implements ActionListener {
 			startGame(GameState.NORMAL_MODE_SELECTED);
 		} else if (e.getSource() == playHard) {
 			startGame(GameState.HARD_MODE_SELECTED);
-		}
-	}
+
+        }
+    }
+
 
 
 
 	private void startGame(GameState mode) {
-		//his.setVisible(false); // Lukker hovedmenyen
+		this.setVisible(false); // Lukker hovedmenyen
 
 		Snake snake = new Snake('S', new CellPosition(10, 10));
 		SnakeBoard board = new SnakeBoard(15, 15);
@@ -124,3 +134,22 @@ public class MainMenu extends JFrame implements ActionListener {
 	}
 
 }
+
+
+/* private void startGame(GameState mode) {
+		//his.setVisible(false); // Lukker hovedmenyen
+
+		Snake snake = new Snake('S', new CellPosition(10, 10));
+		SnakeBoard board = new SnakeBoard(15, 15);
+
+		SnakeModel model = new SnakeModel(board, snake);
+		model.setGameMode(mode); // Setter spillets modus basert på brukerens valg
+		SnakeView view = new SnakeView(model);
+		//model.setView(view);
+		SnakeController controller = new SnakeController(model, view,this);
+		view.getFrame();
+	}
+*/
+	
+
+

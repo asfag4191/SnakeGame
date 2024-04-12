@@ -22,7 +22,7 @@ public class DefaultColorTheme implements ColorTheme {
             case '-' -> boardColor;
             case 'B' -> snakeHead;
             case 'O' -> boardColor;
-            case 'P' -> poisonusApple;
+            case 'P' -> boardColor;
             default -> throw new IllegalArgumentException(
                     "No available color for '" + Cellcontent + "-");
         };

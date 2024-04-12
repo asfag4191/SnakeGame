@@ -3,8 +3,8 @@ package no.uib.inf101.snake.model;
 import no.uib.inf101.grid.CellPosition;
 
 /**
- * The Direction enum represents the four possible directions that a Pacman
- * character can move in: North, South, East, and West.
+ * The Direction enum represents the four possible directions that the snake
+ * can move in: North, South, East, and West.
  */
 public enum Direction {
 
@@ -29,8 +29,10 @@ public enum Direction {
     WEST;
 
     /**
-     * @param pos
-     * @return
+     * Moves a cell position in the specified direction.
+     * 
+     * @param pos The current position.
+     * @return The new position after moving in the specified direction.
      */
     public CellPosition move(CellPosition pos) {
         switch (this) {
@@ -46,5 +48,4 @@ public enum Direction {
                 return pos;
         }
     }
-
 }

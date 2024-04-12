@@ -17,6 +17,8 @@ public class SnakeMain {
         // First, display the main menu
         MainMenu menu = new MainMenu();
 
+        
+
         // Assuming you want to start the game directly for testing,
         // you should initialize the model, view, and controller here correctly.
         // Uncomment and correct the following lines based on your actual constructors.
@@ -46,4 +48,3 @@ public class SnakeMain {
         */
     }
 }
-
