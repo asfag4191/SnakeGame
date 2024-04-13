@@ -78,10 +78,8 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         } else if (this.snakeBoard.get(newPos) == 'P') {
             this.snakeBoard.set(newPos, '-');
             this.snakeBoard.set(this.snake.getTailPos(), '-'); // removes the tail from the board
-            this.snake.move(direction); // Flytt slangen
+            this.snake.move(direction); 
             GeneratePoisonousApple('P');
-            increaseScore();
-            increaseScore();
 
         } else {
             this.snakeBoard.set(this.snake.getTailPos(), '-');

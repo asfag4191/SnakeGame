@@ -9,10 +9,10 @@ public class DefaultColorTheme implements ColorTheme {
 
     private Color boardColor = new Color(113, 131, 85);
     private Color frameColor = new Color(255);
-    public Color snakeColor = new Color(113, 131, 85);
-    public Color snakeHead = new Color(188, 71, 73);
+    //public Color snakeColor = new Color(144, 238, 144, 123);
+    //public Color snakeHead = new Color(188, 71, 73);
     public Color menuFont = new Color(144, 238, 144, 123);;
-    public Color poisonusApple = new Color(255, 255,255);
+    //public Color poisonusApple = new Color(255, 255,255);
 
     @Override
     public Color getCellColor(char Cellcontent) {
@@ -20,7 +20,7 @@ public class DefaultColorTheme implements ColorTheme {
             case 'S' -> boardColor;
             case 'A' -> boardColor;
             case '-' -> boardColor;
-            case 'B' -> snakeHead;
+            //case 'B' -> snakeHead;
             case 'O' -> boardColor;
             case 'P' -> boardColor;
             default -> throw new IllegalArgumentException(

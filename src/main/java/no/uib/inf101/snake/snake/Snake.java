@@ -117,8 +117,6 @@ public class Snake implements Iterable<GridCell<Character>> {
         this.symbol = value;
     }
 
-  
-    
     }
 
 
