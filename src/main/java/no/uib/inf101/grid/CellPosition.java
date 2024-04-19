@@ -7,5 +7,4 @@ package no.uib.inf101.grid;
  * @param col The column of the cell
  */
 public record CellPosition(int row, int col) {
-
 }

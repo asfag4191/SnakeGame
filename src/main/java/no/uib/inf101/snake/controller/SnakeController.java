@@ -71,14 +71,15 @@ public class SnakeController implements KeyListener, ActionListener {
                 handlePause(e);
                 handleStart(e);
                 handleQuit(e);
+                showMainMenu(e);
                 break;
             case START_GAME:
                 handleStart(e);
                 break;
-            case HARD_MODE_SELECTED:
-                break;
-            case NORMAL_MODE_SELECTED:
-                break;
+            //case HARD_MODE_SELECTED:
+                //break;
+            //case NORMAL_MODE_SELECTED:
+                //break;
             default:
                 break;
 
@@ -161,9 +162,9 @@ public class SnakeController implements KeyListener, ActionListener {
     private void showMainMenu(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_M) {
             if (mainMenu != null) {
-                mainMenu.setVisible(true); // Viser hovedmenyen
+                mainMenu.setVisible(true);
                 snakeView.setVisible(false);
-                snakeView.closeWindow(); // Lukker spillvinduet
+                snakeView.closeWindow(); 
                 snakeModel.setGameScreen(GameState.START_GAME);
             }
         }

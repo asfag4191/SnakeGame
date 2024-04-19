@@ -22,11 +22,10 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     private Random random = new Random();
     private boolean hardMode = false;
 
-
     public SnakeModel(SnakeBoard snakeBoard, Snake snake) {
         this.snakeBoard = snakeBoard;
         this.snake = snake;
-        this.direction = Direction.NORTH;// start
+        this.direction = Direction.NORTH;
         GenerateApple('A');
     }
 
@@ -77,9 +76,11 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
             increaseScore();
         } else if (this.snakeBoard.get(newPos) == 'P') {
             this.snakeBoard.set(newPos, '-');
-            this.snakeBoard.set(this.snake.getTailPos(), '-'); // removes the tail from the board
-            this.snake.move(direction); 
+            this.snakeBoard.set(this.snake.getTailPos(), '-'); 
+            this.snake.move(direction);
             GeneratePoisonousApple('P');
+            decreaseScore();
+            
 
         } else {
             this.snakeBoard.set(this.snake.getTailPos(), '-');
@@ -92,7 +93,6 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
 
     @Override
     public void setDirection(Direction newDirection) {
-        // Chech if the new direction is the opposite of current
         if ((this.direction == Direction.NORTH && newDirection != Direction.SOUTH) ||
                 (this.direction == Direction.SOUTH && newDirection != Direction.NORTH) ||
                 (this.direction == Direction.WEST && newDirection != Direction.EAST) ||
@@ -102,10 +102,14 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     }
 
     public void GenerateApple(char c) {
+        //remove the old apple, only one apple on the board at a time
+        if (item!= null) {
+            item.removeItem(snakeBoard, 'A');
+        }
         Item apple = new Item(c);
         CellPosition applePosition = apple.generateRandomPosition(snakeBoard);
-        apple.placeOnBoard(snakeBoard, c);
-        this.item = apple; // Hvis du trenger å beholde referansen til eplet
+        apple.placeOnBoard(snakeBoard, 'A');
+        this.item = apple; // Store the reference to the new apple
     }
 
     private void startHardModeFeatures() {
@@ -115,11 +119,6 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         pappleTimer();
     }
 
-    @Override
-    public int obstacleTimer() {
-        return 2000;
-    }
-
     private void ObstacleFeatures() {
         updateObstacles();
     }
@@ -127,25 +126,20 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     private void updateObstacles() {
         if (hardMode) {
             removeObstacles();
-            createObstacles();
+            createObstacles('O');
         }
     }
 
+    // fiks med nett fra item, den rikitge ligger inne i item.java
     private void removeObstacles() {
-        for (int row = 0; row < snakeBoard.rows(); row++) {
-            for (int col = 0; col < snakeBoard.cols(); col++) {
-                if (snakeBoard.get(new CellPosition(row, col)) == 'O') {
-                    snakeBoard.set(new CellPosition(row, col), '-');
-                }
-            }
-        }
+        item.removeItem(snakeBoard, 'O');
     }
 
-    private void createObstacles() {
+    private void createObstacles(char c) {
         int numberOfObstacles = random.nextInt(10) + 1;
 
         for (int i = 0; i < numberOfObstacles; i++) {
-            Item obstacle = new Item('O');
+            Item obstacle = new Item(c);
             CellPosition position = obstacle.generateRandomPosition(snakeBoard);
             obstacle.placeOnBoard(snakeBoard, 'O');
         }
@@ -163,19 +157,16 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     }
 
     private void removePoisonpusApple() {
-        for (int row = 0; row < snakeBoard.rows(); row++) {
-            for (int col = 0; col < snakeBoard.cols(); col++) {
-                if (snakeBoard.get(new CellPosition(row, col)) == 'P') {
-                    snakeBoard.set(new CellPosition(row, col), '-');
-                }
-            }
-        }
+        item.removeItem(snakeBoard, 'P');
     }
 
     public void GeneratePoisonousApple(char c) {
+        if (item!= null) {
+            item.removeItem(snakeBoard, 'P');
+        }
         Item applePoisinous = new Item(c);
         CellPosition applePposition = applePoisinous.generateRandomPosition(snakeBoard);
-        applePoisinous.placeOnBoard(snakeBoard, c);
+        applePoisinous.placeOnBoard(snakeBoard, 'P');
         this.item = applePoisinous; // Hvis du trenger å beholde referansen til eplet
     }
 
@@ -187,6 +178,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         snake = new Snake('S', startPosition);
         snakeBoard.set(new CellPosition(5, 10), 'A');
         this.direction = Direction.NORTH;
+        
         if (hardMode) {
             setGameMode(GameState.HARD_MODE_SELECTED);
         } else {
@@ -206,13 +198,17 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
             delay = 120;
         } else {
             delay = 90;
-        } System.out.println("Delay: " + delay);
+        }
         return delay;
 
     }
 
     public void increaseScore() {
         this.newscore += 10;
+    }
+
+    public void decreaseScore() {
+        this.newscore -= 10;
     }
 
     @Override
@@ -234,7 +230,6 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     public Iterable<GridCell<Character>> getSnake() {
         return this.snake;
     }
-
 
     @Override
     public int getscore() {
@@ -264,12 +259,15 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         newscore = 0;
     }
 
-
     @Override
     public int pappleTimer() {
         return 3000;
     }
 
+    @Override
+    public int obstacleTimer() {
+        return 2000;
+    }
 
     @Override
     public void clockTickDelay() {
@@ -291,7 +289,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         return hardMode;
     }
 
-    public CellPosition getApplePosition() {
+    public CellPosition getItemPosition() {
         return item.cellPosition;
 
     }
