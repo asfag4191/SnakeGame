@@ -3,7 +3,6 @@ package no.uib.inf101.snake.view.Screens;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Set;
 import java.awt.Component;
 import java.awt.Color;
 import java.awt.Font;
@@ -13,13 +12,9 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import no.uib.inf101.snake.view.Inf101Graphics;
@@ -35,11 +30,11 @@ public class MainMenu extends JFrame implements ActionListener {
 
 	private final JButton playNormal;
 	private final JButton playHard;
-	//private final JSlider volumeSlider;
-
+	private SnakeModel snakeModel;
+	// private final JSlider volumeSlider;
 
 	public MainMenu() {
-		///frame = new JFrame();
+		/// frame = new JFrame();
 		this.setTitle("Welcome to Snake!");
 
 		JPanel contentPane = new JPanel();
@@ -58,12 +53,9 @@ public class MainMenu extends JFrame implements ActionListener {
 		playHard = addButton(contentPane, "Start Hard Game");
 		playHard.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-
 		// spacing
 		contentPane.add(Box.createVerticalGlue());
 
-		
-		// image
 		ImageIcon originalIcon = new ImageIcon(Inf101Graphics.loadImageFromResources("/Snake.png"));
 		Image originalImage = originalIcon.getImage();
 
@@ -85,15 +77,15 @@ public class MainMenu extends JFrame implements ActionListener {
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-	
+
 	}
 
 	/**
-	 * Adds buttons with a fixed style
+	 * Adds the button to the panel, hard mode or normal mode.
 	 * 
 	 * @param buttons
 	 * @param name
-	 * @return
+	 * @return button
 	 */
 	JButton addButton(JPanel buttons, String name) {
 		JButton button = new JButton();
@@ -105,7 +97,6 @@ public class MainMenu extends JFrame implements ActionListener {
 		return button;
 	}
 
-	// closes the current screen to avoid having multiple screens open at the same
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == playNormal) {
@@ -113,43 +104,23 @@ public class MainMenu extends JFrame implements ActionListener {
 		} else if (e.getSource() == playHard) {
 			startGame(GameState.HARD_MODE_SELECTED);
 
-        }
-    }
-
-
-
+		}
+	}
 
 	private void startGame(GameState mode) {
-		this.setVisible(false); // Lukker hovedmenyen
+		this.setVisible(false); // Closes MainMenu
 
 		Snake snake = new Snake('S', new CellPosition(10, 10));
 		SnakeBoard board = new SnakeBoard(15, 15);
-
 		SnakeModel model = new SnakeModel(board, snake);
-		model.setGameMode(mode); // Setter spillets modus basert på brukerens valg
+
+		model.setGameMode(mode);
+
 		SnakeView view = new SnakeView(model);
-		//model.setView(view);
-		SnakeController controller = new SnakeController(model, view,this);
+		SnakeController controller = new SnakeController(model, view, this);
+		// model.setGameScreen(GameState.ACTIVE_GAME);
+
 		view.getFrame();
 	}
 
 }
-
-
-/* private void startGame(GameState mode) {
-		//his.setVisible(false); // Lukker hovedmenyen
-
-		Snake snake = new Snake('S', new CellPosition(10, 10));
-		SnakeBoard board = new SnakeBoard(15, 15);
-
-		SnakeModel model = new SnakeModel(board, snake);
-		model.setGameMode(mode); // Setter spillets modus basert på brukerens valg
-		SnakeView view = new SnakeView(model);
-		//model.setView(view);
-		SnakeController controller = new SnakeController(model, view,this);
-		view.getFrame();
-	}
-*/
-	
-
-

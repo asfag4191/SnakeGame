@@ -6,23 +6,20 @@ import no.uib.inf101.snake.model.GameState;
 /**
  * The interface defines the methods that the controller
  * components of the Snake game needs in order to control the current state of
- * the game. The controller is responsible for starting, pausing, and resetting,
+ * the game.
+ * Responsible for starting, pausing, resetting,
  * and managing the timers of the game.
  */
 public interface ControlleableSnake {
 
     /**
-     * Retrieves the current state of the game.
+     * Retrieves the current state of the game indicating whether the game is
+     * active,
+     * paused, over, or in a specific mode.
      * 
-     * @return The current Game state. Indicating if it's game over, paused,
-     *         running, or which mode is selected.
+     * @return the current state of the game.
      */
     public GameState getGameState();
-
-    /**
-     * Starts a new game.
-     */
-    public void startGame();
 
     /**
      * Resets the game to the initial state.
@@ -30,69 +27,82 @@ public interface ControlleableSnake {
     public void resetGame();
 
     /**
-     * Moves the snake in the specified direction if the move is valid.
+     * Moves the snake in the specified direction if the move is valid,
+     * (not into walls, itself or any objects).
      * 
-     * @param direction The direction in which to move the snake.
+     * @param direction the direction in which to move the snake.
      */
     public void moveSnake(Direction direction);
-
-    /**
-     * Returns the delay time between each clock tick of the snake.
-     * 
-     * @return The delay time.
-     */
-    public int delayTimer();
 
     /**
      * Sets the direction of the snake and prevents moving in the opposite
      * direction.
      * 
-     * @param direction The direction to set.
+     * @param direction the new direction.
      */
     public void setDirection(Direction direction);
 
     /**
-     * Sets the game screen state to the specified GameState.
+     * Updates the game current screen to the specified GameState.
      * 
-     * @param gameScreen The GameState to set.
+     * @param gameScreen the new state to set.
      */
     public void setGameScreen(GameState gameScreen);
 
     /**
-     * Returns the delay time between the placement of obstacles on the board.
+     * Sets the game mode to either normal or hard based on input, what 
+     * the player choose.
      * 
-     * @return The delay time.
+     * @param gameState the new game state indicating the desired mode
+     */
+    public void setGameMode(GameState gameState);
+
+    /**
+     * Returns the delay time between each clock tick of the snake.
+     * 
+     * @return the delay time in milliseconds.
+     */
+    public int delayTimer();
+
+    /**
+     * Returns the delay time between the placement of obstacles on the board,
+     * relevant in hard mode.
+     * 
+     * @return the time in milliseconds between each placement of obstacles on the
+     *         board.
      */
     public int obstacleTimer();
 
     /**
      * Returns the delay time between the placement of poisonous apples on the
-     * board.
+     * board, relevant in hard mode.
      * 
-     * @return The delay time.
+     * @return the time in milliseconds between each placement of the poisonous
+     *         apple on the board.
      */
     public int pappleTimer();
 
     /**
-     * Called on each clock tick to move the snake according to the current state of
-     * the game.
+     * Updates the game at each tick based on the delayTimer, primarily moving the
+     * snake.
      */
     public void clockTickDelay();
 
     /**
-     * Places obstacles on the board on each clock tick when in hard mode.
+     * Places new obstacles on the game board at each tick, applicable in hard mode.
      */
     public void clockTickObstacle();
 
     /**
-     * Places poisonous apples on the board on each clock tick when in hard mode.
+     * Places new poisonous apples on the game board at each tick, applicable in
+     * hard mode.
      */
     public void clockTickPapple();
 
     /**
-     * Checks if the game is currently in hard mode.
-     * 
-     * @return True if in hard mode, false otherwise.
+     * Determines if the game is currently set to hard mode.
+     *
+     * @return true if hard mode is active, false otherwise.
      */
     public boolean isHardMode();
 }

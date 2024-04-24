@@ -1,8 +1,7 @@
 package no.uib.inf101.snake.snake;
 
-import java.util.List;
+
 import java.util.Objects;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -28,7 +27,6 @@ public class Snake implements Iterable<GridCell<Character>> {
         CellPosition newHeadPos = new CellPosition(getHeadPos().row() + deltaRow, getHeadPos().col() + deltaCol);
         return new Snake(symbol,newHeadPos);
     }
-   //it just returns the head for the snake
     public LinkedList<GridCell<Character>> getSnake() {
         return this.body;
     }
@@ -66,8 +64,6 @@ public class Snake implements Iterable<GridCell<Character>> {
         this.body.addFirst(cell);
     }
 
-//sjekk denne funksjonen 
-//addFirst()?
     public void grow(CellPosition pos){
         body.addFirst(new GridCell<>(pos, 'S'));
         

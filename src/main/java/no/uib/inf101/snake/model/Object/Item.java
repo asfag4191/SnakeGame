@@ -1,4 +1,4 @@
-package no.uib.inf101.snake.model.Object;
+package no.uib.inf101.snake.model.object;
 
 import java.util.Random;
 
@@ -62,4 +62,3 @@ public class Item {
         return cellPosition;
     }
 }
-

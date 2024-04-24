@@ -24,6 +24,12 @@ import javax.swing.JPanel;
 import no.uib.inf101.grid.GridCell;
 import no.uib.inf101.snake.model.GameState;
 
+/**
+ * This class represents the visual component of the Snake game, displaying the
+ * game board,
+ * snake, and game states such as starting, pausing, and game over.
+ */
+
 public class SnakeView extends JPanel {
     private ViewableSnakeView snakeModel;
     private ColorTheme colorTheme;
@@ -31,6 +37,11 @@ public class SnakeView extends JPanel {
     private static final int INNERMARGIN = 2;
     private static final int OUTERMARGIN = 2;
 
+    /**
+     * Constructs a SnakeView instance with a specified model for game data.
+     * 
+     * @param snakeModel The snake model to be displayed for visual representation.
+     */
     public SnakeView(ViewableSnakeView snakeModel) {
         setPreferredSize(new Dimension(800, 600));
         this.snakeModel = snakeModel;
@@ -54,12 +65,17 @@ public class SnakeView extends JPanel {
             }
 
             if (snakeModel.getGameState() == GameState.GAME_OVER) {
-                drawReplayText(g2);
+                drawGameOverScreen(g2);
 
             }
         }
     }
 
+    /**
+     * Draw the game elements on the screen.
+     * 
+     * @param g2 context used for drawing the game elements.
+     */
     private void drawGame(Graphics2D g2) {
         double margin = 0; // rammetykkelse
         double x = INNERMARGIN;
@@ -77,7 +93,6 @@ public class SnakeView extends JPanel {
 
         drawCells(g2, snakeModel.getTilesOnBoard(), converter, colorTheme);
         drawCells(g2, snakeModel.getSnake(), converter, colorTheme);
-
     }
 
     /**
@@ -102,22 +117,17 @@ public class SnakeView extends JPanel {
             Color cellColor = colorTheme.getCellColor(cell.value());
             g2.setColor(cellColor);
             g2.fill(cellBounds);
-            // Hvis cellen er slangehodet, tegn en spesiell farge og fyll hele cellen
+
             if (cell.pos().equals(snakeModel.getHeadPos())) {
                 g2.drawImage(headSymbol.getImage(), (int) cellBounds.getX(), (int) cellBounds.getY(),
                         (int) cellBounds.getWidth(),
                         (int) cellBounds.getHeight(), null);
-            }
-            // Hvis cellen er en eple, tegn eplebildet
-            else if (cell.value() == 'A') {
+            } else if (cell.value() == 'A') {
                 g2.drawImage(appleSymbol.getImage(), (int) cellBounds.getX(), (int) cellBounds.getY(),
                         (int) cellBounds.getWidth(),
                         (int) cellBounds.getHeight(), null);
 
-            }
-            // Hvis cellen er en del av slangen (ikke hodet), tegn slangebildet litt mindre
-            // enn hele ruten
-            else if (cell.value() == 'S') {
+            } else if (cell.value() == 'S') {
                 int inset = 2; // som over
                 g2.drawImage(snakeSymbol.getImage(),
                         (int) cellBounds.getX() + inset,
@@ -137,36 +147,44 @@ public class SnakeView extends JPanel {
         }
     }
 
+    /**
+     * Draw the current score on the game screen.
+     * 
+     * @param g2 context used for drawing the score.
+     */
     private void drawScore(Graphics2D g2) {
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, 15));
 
         String text = "Score: " + snakeModel.getscore();
         FontMetrics fm = g2.getFontMetrics();
-
-        // Sette x til en liten marg fra venstre kant av skjermen
         int x = 10;
-        int y = fm.getAscent() + 10; // Igjen, juster verdien som ønsket
+        int y = fm.getAscent() + 10;
 
         g2.drawString(text, x, y);
     }
 
-    private void drawReplayText(Graphics2D g2) {
+    /**
+     * Draw the game over screen.
+     * 
+     * @param g2 context used for drawing the game over screen.
+     */
+    private void drawGameOverScreen(Graphics2D g2) {
         // Create a gradient background
         GradientPaint gradientPaint = new GradientPaint(0, 0, new Color(181, 201, 154, 128), 0, getHeight(),
-                new Color(120, 130, 120, 128), true);
+                new Color(113, 131, 85), true);
         g2.setPaint(gradientPaint);
         g2.fillRect(0, 0, getWidth(), getHeight());
 
-        // Add a shadow to the text by drawing the text twice in offset positions
+        // add a shadow to the text
         int shadowOffset = 2;
-        Color shadowColor = new Color(0, 0, 0, 150); // Semi-transparent black
+        Color shadowColor = Color.RED.darker();
         Color textColor = Color.WHITE;
 
         Font font = new Font("Arial", Font.BOLD, 24);
         g2.setFont(font);
 
-        // Shadow text
+        // Draw the shadow text.
         g2.setColor(shadowColor);
         Inf101Graphics.drawCenteredString(
                 g2, "Game Over", 20 + shadowOffset, 75 + shadowOffset, this.getWidth() - 40, this.getHeight() - 540);
@@ -177,6 +195,7 @@ public class SnakeView extends JPanel {
                 g2, "PRESS ENTER TO PLAY AGAIN", 20 + shadowOffset, 175 + shadowOffset, this.getWidth() - 40,
                 this.getHeight() - 540);
 
+        // Draw the text
         g2.setColor(textColor);
         Inf101Graphics.drawCenteredString(
                 g2, "Game Over", 20, 75, this.getWidth() - 40, this.getHeight() - 540);
@@ -187,53 +206,53 @@ public class SnakeView extends JPanel {
                 g2, "PRESS ENTER TO PLAY AGAIN", 20, 175, this.getWidth() - 40, this.getHeight() - 540);
     }
 
+    /**
+     * Draw the start screen.
+     * 
+     * @param g2 context used for drawing the start screen.
+     */
     private void drawStartscreen(Graphics2D g2) {
-        // image
         ImageIcon originalIcon = new ImageIcon(Inf101Graphics.loadImageFromResources("/Snake.png"));
         Image originalImage = originalIcon.getImage();
 
-        // Draw the background image
         g2.drawImage(originalImage, 0, 0, getWidth(), getHeight(), this);
 
-        // Set semi-transparent overlay for text background for readability
         g2.setColor(new Color(0, 0, 0, 123)); // Semi-transparent black
-        int overlayHeight = 150; // Example height, adjust as needed
+        int overlayHeight = 150;
         int overlayYPosition = (getHeight() - overlayHeight) / 2;
-        g2.fillRect(0, overlayYPosition, getWidth(), overlayHeight); // Full width overlay
+        g2.fillRect(0, overlayYPosition, getWidth(), overlayHeight);
 
-        // Set up the text
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, 40));
         String message = "Press SPACE to begin!";
 
-        // Calculate width and height of the text to be drawn, to position it in the
-        // center
         FontMetrics metrics = g2.getFontMetrics();
         int x = (getWidth() - metrics.stringWidth(message)) / 2;
         int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent(); // Adjust y to center the text
                                                                                  // vertically
 
-        // Draw the text
         g2.drawString(message, x, y);
     }
 
+    /**
+     * Draw the pause screen.
+     * 
+     * @param g2 context used for drawing the pause screen.
+     */
     public void drawPauseScreen(Graphics2D g2) {
-        // Semi-transparent overlay for focused area
-        g2.setColor(new Color(0, 0, 0, 123)); // Semi-transparent black
-        int overlayWidth = this.getWidth() - 80; // Adjust the width for the overlay
-        int overlayHeight = 200; // Define the height for the overlay
-        int overlayX = 40; // Horizontal starting point (padding from the left)
-        int overlayY = (this.getHeight() - overlayHeight) / 2; // Vertical starting point (centered)
+        g2.setColor(new Color(0, 0, 0, 123));
+        int overlayWidth = this.getWidth() - 80;
+        int overlayHeight = 200;
+        int overlayX = 40;
+        int overlayY = (this.getHeight() - overlayHeight) / 2;
         g2.fillRect(overlayX, overlayY, overlayWidth, overlayHeight);
 
         g2.setColor(Color.WHITE);
         Font font = new Font("Arial", Font.BOLD, 24);
         g2.setFont(font);
 
-        // Assuming drawCenteredString correctly centers text within a given rectangle
-        // The text positions are now relative to the overlay, not the whole screen
-        int textYStart = overlayY + 20; // Start drawing text a bit below the top of the overlay
-        int lineHeight = g2.getFontMetrics().getHeight(); // Calculate line height for the font
+        int textYStart = overlayY + 20;
+        int lineHeight = g2.getFontMetrics().getHeight();
         Inf101Graphics.drawCenteredString(g2, "PAUSED", overlayX, textYStart, overlayWidth, lineHeight);
         Inf101Graphics.drawCenteredString(g2, "Press 'SPACE' to resume", overlayX, textYStart + lineHeight,
                 overlayWidth, lineHeight);
@@ -241,6 +260,11 @@ public class SnakeView extends JPanel {
                 textYStart + 2 * lineHeight, overlayWidth, lineHeight);
     }
 
+    /**
+     * Get the main frame of the game.
+     * 
+     * @return the main frame of the game.
+     */
     public JFrame getFrame() {
         if (mainFrame == null) {
             mainFrame = new JFrame("SNAKE GAME");
@@ -250,7 +274,6 @@ public class SnakeView extends JPanel {
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-            // Example: Adding some content to the side panel
             JLabel label = new JLabel("Side Menu");
             panel.add(label);
 
@@ -266,28 +289,22 @@ public class SnakeView extends JPanel {
                     + "Main Menu: [M]" + "</html>");
 
             keys.setFont(new Font("Arial", Font.PLAIN, 18));
-            // keys.setForeground(ColorTheme.menuFont);
             keys.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-            // You can add more components to the panel here
 
-            // Add the game view (this panel) to the center of the frame
             mainFrame.add(this, BorderLayout.CENTER);
-
-            // Add the menu (panel) to the right of the frame
             mainFrame.add(panel, BorderLayout.EAST);
 
             panel.add(keys);
-
-            mainFrame.pack(); // Adjusts frame to fit the preferred size and layouts of its subcomponents
-            mainFrame.setLocationRelativeTo(null); // Centers the frame on the screen
-            mainFrame.setVisible(true); // Makes the frame visible
+            mainFrame.pack();
+            mainFrame.setLocationRelativeTo(null);
+            mainFrame.setVisible(true);
 
         }
         return mainFrame;
     }
 
     /**
-     * Close the JFrame
+     * Close the main frame window.
      */
     public void closeWindow() {
         mainFrame.setVisible(false);

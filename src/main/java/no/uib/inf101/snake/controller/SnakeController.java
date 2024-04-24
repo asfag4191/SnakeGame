@@ -1,6 +1,5 @@
 package no.uib.inf101.snake.controller;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -77,8 +76,10 @@ public class SnakeController implements KeyListener, ActionListener {
                 handleStart(e);
                 break;
             //case HARD_MODE_SELECTED:
+           // handleStart(e);
                 //break;
             //case NORMAL_MODE_SELECTED:
+            //handleStart(e);
                 //break;
             default:
                 break;
@@ -120,9 +121,13 @@ public class SnakeController implements KeyListener, ActionListener {
      */
     private void handleStart(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            //if (snakeModel.getGameState()==GameState.CHOOSE_DIFFICULTY){
+                //snakeModel.setGameScreen(GameState.ACTIVE_GAME);
+               // snakeView.repaint();
+            //}
             snakeSong.run();
             snakeModel.setGameScreen(GameState.ACTIVE_GAME);
-            snakeView.repaint();
+            //snakeView.repaint();
         }
     }
 
@@ -274,4 +279,5 @@ public class SnakeController implements KeyListener, ActionListener {
     @Override
     public void keyReleased(KeyEvent e) {
     }
+
 }

@@ -3,7 +3,10 @@ package no.uib.inf101.snake.model;
 import org.junit.jupiter.api.Test;
 
 import no.uib.inf101.grid.CellPosition;
-import no.uib.inf101.snake.model.Object.Item;
+import no.uib.inf101.snake.model.SnakeModel;
+import no.uib.inf101.snake.model.object.Item;
+import no.uib.inf101.snake.model.SnakeBoard;
+
 import no.uib.inf101.snake.snake.Snake;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -141,7 +144,7 @@ public class TestSnakeModel {
         CellPosition newApplePosition = null;
         for (int row = 0; row < snakeBoard.rows(); row++) {
             for (int col = 0; col < snakeBoard.cols(); col++) {
-                if (snakeBoard.get(new CellPosition(row, col)) == 'A') {
+                if (snakeBoard.get(new CellPosition(row, col)) == 'P') {
                     applePCount++;
                     newApplePosition = new CellPosition(row, col);
                 }

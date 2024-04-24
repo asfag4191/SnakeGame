@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import no.uib.inf101.grid.CellPosition;
 
 import no.uib.inf101.snake.model.SnakeBoard;
+import no.uib.inf101.snake.model.object.Item;
 
 public class TestItem{
 
