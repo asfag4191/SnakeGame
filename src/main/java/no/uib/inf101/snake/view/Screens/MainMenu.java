@@ -30,21 +30,15 @@ public class MainMenu extends JFrame implements ActionListener {
 
 	private final JButton playNormal;
 	private final JButton playHard;
-	private SnakeModel snakeModel;
-	// private final JSlider volumeSlider;
 
 	public MainMenu() {
-		/// frame = new JFrame();
 		this.setTitle("Welcome to Snake!");
 
 		JPanel contentPane = new JPanel();
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 		contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
-
 		Color bcg = new Color(181, 201, 154);
 		contentPane.setBackground(bcg);
-
-		// buttons
 		contentPane.add(Box.createVerticalGlue());
 
 		playNormal = addButton(contentPane, "Start Normal Game");
@@ -53,7 +47,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		playHard = addButton(contentPane, "Start Hard Game");
 		playHard.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		// spacing
+
 		contentPane.add(Box.createVerticalGlue());
 
 		ImageIcon originalIcon = new ImageIcon(Inf101Graphics.loadImageFromResources("/Snake.png"));
@@ -61,7 +55,6 @@ public class MainMenu extends JFrame implements ActionListener {
 
 		int Width = 600;
 		int Height = 400;
-
 		Image resizedImage = originalImage.getScaledInstance(Width, Height, Image.SCALE_SMOOTH);
 
 		ImageIcon resizedIcon = new ImageIcon(resizedImage);
@@ -107,7 +100,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		}
 	}
 
-	private void startGame(GameState mode) {
+	public void startGame(GameState mode) {
 		this.setVisible(false); // Closes MainMenu
 
 		Snake snake = new Snake('S', new CellPosition(10, 10));
