@@ -33,6 +33,4 @@ public enum GameState {
      * Represents the state when the hard mode is selected.
      */
     HARD_MODE_SELECTED,
-
-    CHOOSE_DIFFICULTY,
 }

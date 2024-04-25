@@ -3,13 +3,13 @@ package no.uib.inf101.snake.model;
 import org.junit.jupiter.api.Test;
 
 import no.uib.inf101.grid.CellPosition;
-import no.uib.inf101.snake.model.SnakeModel;
 import no.uib.inf101.snake.model.object.Item;
-import no.uib.inf101.snake.model.SnakeBoard;
 
 import no.uib.inf101.snake.snake.Snake;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.lang.reflect.Method;
 
 public class TestSnakeModel {
 
@@ -86,7 +86,7 @@ public class TestSnakeModel {
         SnakeModel snakeModel = new SnakeModel(snakeBoard, snake);
         CellPosition applePosition = new CellPosition(1, 4);
 
-        snakeBoard.set(applePosition, 'A'); // Ensure the board is initially clear except for one apple
+        snakeBoard.set(applePosition, 'A');
 
         assertEquals(1, snake.getLength(), "Initial snake length should be 1");
         snakeModel.setDirection(Direction.NORTH);
@@ -95,7 +95,6 @@ public class TestSnakeModel {
         assertEquals(applePosition, snake.getHeadPos(), "Snake should move to the apple position");
         assertEquals(2, snake.getLength(), "Snake length should increase after eating an apple");
 
-        // Assert that the original apple position is now empty
         assertEquals('S', snakeBoard.get(applePosition), "Original apple position should be cleared");
 
         // Verify that a new apple is generated and it's the only one on the board
@@ -170,23 +169,25 @@ public class TestSnakeModel {
         assertEquals(GameState.GAME_OVER, snakeModel.getGameState(), "Game should end after moving into an obstacle");
     }
 
+    // https://www.baeldung.com/java-unit-test-private-methods source for reflection on test on private classes
     @Test
-    public void testGenerateApple() {
+    public void testGenerateApple() throws Exception {
         SnakeBoard snakeBoard = new SnakeBoard(5, 5);
         Snake snake = new Snake('S', new CellPosition(2, 2));
         SnakeModel snakeModel = new SnakeModel(snakeBoard, snake);
         Item item = new Item('A');
 
-        item.removeItem(snakeBoard, 'A'); // removes the apple before generating a new for this test
+        item.removeItem(snakeBoard, 'A'); 
 
-        snakeModel.GenerateApple('A');
+        // Using reflection to access the private method
+        Method generateApple = SnakeModel.class.getDeclaredMethod("GenerateApple", char.class);
+        generateApple.setAccessible(true);
+        generateApple.invoke(snakeModel, 'A');
 
-        // Get the position of the generated apple from snakeModel
         Item apple = snakeModel.getItem();
         CellPosition applePosition = apple.getItemPosition();
 
         assertNotNull(applePosition, "The apple position should not be null.");
-
         assertEquals('A', snakeBoard.get(applePosition),
                 "The apple should be placed on the board at the apple's position.");
 
@@ -208,35 +209,71 @@ public class TestSnakeModel {
     }
 
     @Test
-    public void testDelayTimer() {
-        // Setup
+    public void testDelayTimer() throws Exception {
         SnakeBoard snakeBoard = new SnakeBoard(5, 5);
         Snake snake = new Snake('S', new CellPosition(2, 2));
         SnakeModel snakeModel = new SnakeModel(snakeBoard, snake);
 
-        // Test initial delay
+        // Access the increaseScore method using reflection
+        Method increaseScore = SnakeModel.class.getDeclaredMethod("increaseScore");
+        increaseScore.setAccessible(true);
+
         assertEquals(200, snakeModel.delayTimer(), "Initial delay should be 200");
 
-        // Simulate eating apples and reaching a score of 100
         for (int i = 0; i < 10; i++) {
-            snakeModel.increaseScore(); // Assuming each apple eaten increases the score by 10
+            increaseScore.invoke(snakeModel); 
         }
         assertEquals(150, snakeModel.delayTimer(), "Delay should be 150 after eating 10 apples");
 
-        // Simulate eating more apples to reach a score of 200
         for (int i = 0; i < 10; i++) {
-            snakeModel.increaseScore();
+            increaseScore.invoke(snakeModel);
         }
         assertEquals(120, snakeModel.delayTimer(), "Delay should be 120 after eating 20 apples");
 
-        // Simulate eating more apples to reach a score of 250
         for (int i = 0; i < 5; i++) {
-            snakeModel.increaseScore();
+            increaseScore.invoke(snakeModel);
         }
         assertEquals(90, snakeModel.delayTimer(), "Delay should be 90 after eating 25 apples");
     }
+
+    @Test
+    public void testNormalGameModeSelection() {
+        SnakeBoard snakeBoard = new SnakeBoard(20, 20);
+        Snake snake = new Snake('S', new CellPosition(5, 5));
+        SnakeModel model = new SnakeModel(snakeBoard, snake);
+    
+        model.setGameMode(GameState.NORMAL_MODE_SELECTED);
+        assertFalse(model.isHardMode(), "Game should not be in hard mode when normal mode is selected.");
+        assertEquals(GameState.START_GAME, model.getGameState(), "Game state should remain START_GAME after setting normal mode.");
+    }
+    
+    @Test
+    public void testHardGameModeSelection() {
+        SnakeBoard snakeBoard = new SnakeBoard(20, 20);
+        Snake snake = new Snake('S', new CellPosition(5, 5));
+        SnakeModel model = new SnakeModel(snakeBoard, snake);
+    
+        model.setGameMode(GameState.HARD_MODE_SELECTED);
+        assertTrue(model.isHardMode(), "Game should be in hard mode when hard mode is selected.");
+        assertEquals(GameState.START_GAME, model.getGameState(), "Game state should remain START_GAME after setting hard mode.");
+    }
+
+    @Test
+    public void testResetGame() {
+        SnakeBoard snakeBoard = new SnakeBoard(20, 20);
+        CellPosition initialPosition = new CellPosition(10, 10);
+        Snake snake = new Snake('S', initialPosition);
+        SnakeModel model = new SnakeModel(snakeBoard, snake);
+
+        model.moveSnake(Direction.NORTH); 
+        model.resetGame();
+
+        assertEquals(GameState.ACTIVE_GAME, model.getGameState(), "Game state should be ACTIVE_GAME after reset.");
+        assertEquals(initialPosition, model.getHeadPos(), "Snake should be reset to the starting position after reset.");
+        assertEquals('A', snakeBoard.get(new CellPosition(5, 10)), "There should be an apple at position (5, 10) after reset.");
+
+    }
 }
 
-// lag test for å sjekke at det alltid er et eple på brettet og de derene andre
-// og sjekk den removeItem funksjonen,
-// sjekk med enum for hard mode selected og normal mode, om kan fjerne
+
+

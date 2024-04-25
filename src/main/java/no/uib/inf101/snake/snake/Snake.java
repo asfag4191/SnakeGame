@@ -1,7 +1,6 @@
 package no.uib.inf101.snake.snake;
 
 
-import java.util.Objects;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -14,8 +13,6 @@ public class Snake implements Iterable<GridCell<Character>> {
     private char symbol;
     private LinkedList<GridCell<Character>> body;
 
-  
-    //new snake with given head positions
     public Snake(char symbol, CellPosition headPos) {
        this.body= new LinkedList<>();
        this.symbol=symbol;
@@ -37,14 +34,10 @@ public class Snake implements Iterable<GridCell<Character>> {
         return body.iterator();
     }
 
-
-    //the length is set to 1, does not change 
     public int getLength() { 
         return body.size();
     }
 
-
-    //get the snake position, list over the positions to the snake segments 
     public CellPosition getHeadPos() {
         return body.getFirst().pos();
     }
@@ -59,7 +52,6 @@ public class Snake implements Iterable<GridCell<Character>> {
       
         GridCell<Character> cell = new GridCell<>(newHeadPos, this.symbol);
 
-        // You'll need to adjust this to handle the snake's body and ensure you're not just moving the head.
         this.body.pollLast();
         this.body.addFirst(cell);
     }
@@ -67,30 +59,6 @@ public class Snake implements Iterable<GridCell<Character>> {
     public void grow(CellPosition pos){
         body.addFirst(new GridCell<>(pos, 'S'));
         
-    }
-
-    /**
-     * Compares the GamePlayer object with the specified object for equality.
-     *
-     * Returns true if the specified object is also a GamePlayer object and
-     * has the same symbol and position as this GamePlayer object.
-     *
-     * @param o the object to be compared for equality with this GamePlayer
-     * @return true if the specified object is equal to this GamePlayer; false
-     *         otherwise
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Snake)) {
-            return false;
-        }
-        Snake playerO = (Snake) o;
-        boolean playerBool = playerO.symbol == this.symbol;
-        return playerBool
-                && Objects.equals(getHeadPos(), playerO.getHeadPos());
     }
 
     /**

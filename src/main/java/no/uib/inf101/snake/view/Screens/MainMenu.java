@@ -118,7 +118,6 @@ public class MainMenu extends JFrame implements ActionListener {
 
 		SnakeView view = new SnakeView(model);
 		SnakeController controller = new SnakeController(model, view, this);
-		// model.setGameScreen(GameState.ACTIVE_GAME);
 
 		view.getFrame();
 	}

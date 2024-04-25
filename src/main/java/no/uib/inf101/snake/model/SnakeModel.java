@@ -11,8 +11,10 @@ import no.uib.inf101.snake.controller.ControlleableSnake;
 import no.uib.inf101.snake.model.object.Item;
 
 /**
- * Represents the model for the snake game, managing the state the game is in
- * and logic of the game.
+ * Represents the model component of the snake game, managing the state and
+ * logic of the game.
+ * This includes handling game progression, movements, and interactions within
+ * the game grid.
  */
 public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
 
@@ -27,10 +29,10 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     private boolean hardMode = false;
 
     /**
-     * Constructor to initialize the SnakeModel with a board and a snake.
+     * Constructor to initialize the SnakeModel with a specified board and a snake.
      * 
-     * @param snakeBoard the game board
-     * @param snake      the snake
+     * @param snakeBoard the game board used for snakes enviorment.
+     * @param snake      the snake object to be used in the game.
      */
     public SnakeModel(SnakeBoard snakeBoard, Snake snake) {
         this.snakeBoard = snakeBoard;
@@ -54,10 +56,12 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     }
 
     /**
-     * Checks if the move is legal, that is if the snake is moving into a wall,
-     * itself or any objects in the hard mode.
-     * 
-     * @param direction the direction to move the snake.
+     * Checks whether the snake's next move is legal. A move is considered illegal
+     * if it results
+     * in the snake moving into a wall, itself, or any objects if the game is in
+     * hard mode.
+     *
+     * @param direction the intended direction of the snake's movement.
      * @return true if the move is legal, false otherwise.
      */
     private boolean legalMove(Direction direction) {
@@ -70,7 +74,6 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         if (this.snakeBoard.get(newPos) == 'O') {
             return false;
         }
-
         if (this.snakeBoard.get(newPos) == 'S') {
             return false;
         }
@@ -93,23 +96,23 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
             this.snakeBoard.set(newPos, '-');
             this.snakeBoard.set(this.snake.getTailPos(), '-');
             this.snake.move(direction);
-            GeneratePoisonousApple('P');
+            generatePoisonousApple('P');
             decreaseScore();
         } else {
             this.snakeBoard.set(this.snake.getTailPos(), '-');
             this.snake.move(direction);
         }
-
         this.snakeBoard.set(this.snake.getHeadPos(), 'S');
     }
 
     /**
-     * Chech if there already is an apple on the board, if so remove it and generate
-     * a new one.
-     * 
-     * @param c the character to be generated on the board, in this case an apple.
+     * Checks if there is already an apple on the board, removes it if present, and
+     * then generates
+     * a new apple at a random position on the board.
+     *
+     * @param c the character representing an apple, used for placing on the board.
      */
-    public void GenerateApple(char c) {
+    private void GenerateApple(char c) {
         if (item != null) {
             item.removeItem(snakeBoard, 'A');
         }
@@ -120,44 +123,28 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     }
 
     /**
-     * Starts the hard mode features, that is the obstacles and the poisonous apple,
-     * and their timers.
+     * Starts the hard mode features which include generating obstacles and a
+     * poisonous apple,
+     * along with setting their respective timers for updates.
      */
     private void startHardModeFeatures() {
-        updateObstacles();
-        updatePoisonusApple();
+        createObstacles('O');
+        generatePoisonousApple('P');
         obstacleTimer();
         pappleTimer();
     }
 
     /**
-     * Updates the obstacles on the board, if the game is in hard mode.
-     * Removes the obstacles and generates new ones.
-     */
-    private void updateObstacles() {
-        if (hardMode) {
-            removeObstacles();
-            createObstacles('O');
-        }
-    }
-
-    /**
-     * Function to remove the obstacles from the board.
-     */
-    private void removeObstacles() {
-        item.removeItem(snakeBoard, 'O');
-    }
-
-    /**
-     * Function to create the obstacles on the board. Generates a random number from
-     * 1 to 10 obstacles on the board.
+     * Removes the obstacles from the board and generate new ones.
+     * Generates a random number from 1 to 10 for the new obstacles.
      * 
-     * @param c the character to be generated on the board, in this case an
-     *          obstacle.
+     * @param c the character representing obstacles.
      */
     private void createObstacles(char c) {
         int numberOfObstacles = random.nextInt(10) + 1;
-
+        if (item != null) {
+            item.removeItem(snakeBoard, 'O');
+        }
         for (int i = 0; i < numberOfObstacles; i++) {
             Item obstacle = new Item(c);
             obstacle.generateRandomPosition(snakeBoard);
@@ -165,32 +152,13 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         }
     }
 
-
-
     /**
-     * If in hard mode removes the poisonous apple from the board, then generates a
-     * new one. 
-     */
-    private void updatePoisonusApple() {
-        if (hardMode) {
-            removePoisonpusApple();
-            GeneratePoisonousApple('P');
-        }
-    }
-
-    /**
-     * Removes the poisonous apple from the board.
-     */ 
-    private void removePoisonpusApple() {
-        item.removeItem(snakeBoard, 'P');
-    }
-
-    /**
-     * Remove the poisonous apple from the board and generate a new one, 
+     * Remove the poisonous apple from the board and generate a new one,
      * places the new poisinous apple on a random position on the board.
+     * 
      * @param c
      */
-    public void GeneratePoisonousApple(char c) {
+    private void generatePoisonousApple(char c) {
         if (item != null) {
             item.removeItem(snakeBoard, 'P');
         }
@@ -215,7 +183,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
         snakeBoard.clearBoard();
         newscore = 0;
         CellPosition startPosition = new CellPosition(10, 10);
-        snake = new Snake('S', startPosition);
+        this.snake = new Snake('S', startPosition);
         snakeBoard.set(new CellPosition(5, 10), 'A');
         this.direction = Direction.NORTH;
 
@@ -246,14 +214,14 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
     /**
      * increases the score by 10.
      */
-    public void increaseScore() {
+    private void increaseScore() {
         this.newscore += 10;
     }
 
     /**
      * Decreases the score by 10.
      */
-    public void decreaseScore() {
+    private void decreaseScore() {
         this.newscore -= 10;
     }
 
@@ -301,7 +269,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
 
     @Override
     public int pappleTimer() {
-        return 1500;
+        return 1000;
     }
 
     @Override
@@ -316,25 +284,16 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
 
     @Override
     public void clockTickObstacle() {
-        updateObstacles();
+        createObstacles('O');
     }
 
     @Override
     public void clockTickPapple() {
-        updatePoisonusApple();
+        generatePoisonousApple('P');
     }
 
     @Override
     public boolean isHardMode() {
         return hardMode;
     }
-
-    // public CellPosition getItemPosition() {
-    // return item.cellPosition;
-
-    // }
-
-    // public SnakeBoard getBoard() {
-    // return snakeBoard;
-    // }
 }

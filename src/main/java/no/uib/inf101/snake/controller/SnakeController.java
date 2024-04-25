@@ -75,12 +75,6 @@ public class SnakeController implements KeyListener, ActionListener {
             case START_GAME:
                 handleStart(e);
                 break;
-            //case HARD_MODE_SELECTED:
-           // handleStart(e);
-                //break;
-            //case NORMAL_MODE_SELECTED:
-            //handleStart(e);
-                //break;
             default:
                 break;
 
@@ -121,15 +115,11 @@ public class SnakeController implements KeyListener, ActionListener {
      */
     private void handleStart(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            //if (snakeModel.getGameState()==GameState.CHOOSE_DIFFICULTY){
-                //snakeModel.setGameScreen(GameState.ACTIVE_GAME);
-               // snakeView.repaint();
-            //}
             snakeSong.run();
             snakeModel.setGameScreen(GameState.ACTIVE_GAME);
-            //snakeView.repaint();
         }
     }
+
 
     /**
      * Method for handling the quit function.
@@ -175,7 +165,6 @@ public class SnakeController implements KeyListener, ActionListener {
         }
     }
     
-
     /**
      * Method for handling the pause function. 
      * 
