@@ -26,11 +26,21 @@ import no.uib.inf101.snake.model.SnakeBoard;
 import no.uib.inf101.snake.model.SnakeModel;
 import no.uib.inf101.snake.snake.Snake;
 
+/**
+ * The MainMenu class creates and displays the main menu screen
+ * for the Snake game. This screen allows players to choose between
+ * different game modes before starting the game.
+ */
 public class MainMenu extends JFrame implements ActionListener {
 
 	private final JButton playNormal;
 	private final JButton playHard;
 
+	/**
+	 * Constructs the MainMenu frame with all UI components necessary
+	 * for starting the game. Initializes buttons to select game mode
+	 * and customizes the panel's appearance.
+	 */
 	public MainMenu() {
 		this.setTitle("Welcome to Snake!");
 
@@ -46,7 +56,6 @@ public class MainMenu extends JFrame implements ActionListener {
 
 		playHard = addButton(contentPane, "Start Hard Game");
 		playHard.setAlignmentX(Component.CENTER_ALIGNMENT);
-
 
 		contentPane.add(Box.createVerticalGlue());
 
@@ -70,15 +79,15 @@ public class MainMenu extends JFrame implements ActionListener {
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-
 	}
 
 	/**
-	 * Adds the button to the panel, hard mode or normal mode.
-	 * 
-	 * @param buttons
-	 * @param name
-	 * @return button
+	 * Adds a button to the specified {@link JPanel} with a given name.
+	 * Sets up the alignment, font, and action listener for the button.
+	 *
+	 * @param buttons The panel to which the button will be added.
+	 * @param name    The text displayed on the button.
+	 * @return The newly created button.
 	 */
 	JButton addButton(JPanel buttons, String name) {
 		JButton button = new JButton();
@@ -100,6 +109,12 @@ public class MainMenu extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * Starts a new game with selected mode. Hides the main menu and
+	 * initializes the game with the selected game mode.
+	 *
+	 * @param mode The game mode to start, represented by a {@link GameState}.
+	 */
 	public void startGame(GameState mode) {
 		this.setVisible(false); // Closes MainMenu
 
@@ -114,5 +129,4 @@ public class MainMenu extends JFrame implements ActionListener {
 
 		view.getFrame();
 	}
-
 }

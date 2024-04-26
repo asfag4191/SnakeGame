@@ -8,8 +8,7 @@ import no.uib.inf101.snake.model.SnakeBoard;
 /**
  * Represents an item in the snake game that can be placed on the game board.
  * Items are placed on random positions on the board and may represent various
- * objects
- * in the game such as apples or obstacles.
+ * objects in the game such as apples or obstacles.
  */
 public class Item {
     public char character;
@@ -18,7 +17,9 @@ public class Item {
     public Random random = new Random();
 
     /**
-     * Constructs an item with a specified character.
+     * Constructs an item with a specified character which represents the item on
+     * the game board.
+     * This character is used to visually distinguish different types of items.
      *
      * @param character The character that represents this item on the game board.
      */
@@ -56,7 +57,6 @@ public class Item {
      */
     public void placeOnBoard(SnakeBoard snakeBoard, char c) {
         snakeBoard.set(cellPosition, c);
-
     }
 
     /**
@@ -93,5 +93,4 @@ public class Item {
     public char getCharacter() {
         return character;
     }
-
 }

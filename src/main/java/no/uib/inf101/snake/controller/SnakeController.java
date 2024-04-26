@@ -13,11 +13,11 @@ import no.uib.inf101.snake.model.GameState;
 import no.uib.inf101.snake.view.SnakeView;
 import no.uib.inf101.snake.view.Screens.MainMenu;
 
-
 /**
- * Controller for Snake game, tracking user input and updating the model
- * accordingly.
- * Implements KeyListener and ActionListener.
+ * Controller for the Snake game, managing the interaction between user inputs
+ * and the game model.
+ * Implements {@link KeyListener} to handle keyboard events and
+ * {@link ActionListener}.
  */
 public class SnakeController implements KeyListener, ActionListener {
     private final ControlleableSnake snakeModel;
@@ -28,21 +28,19 @@ public class SnakeController implements KeyListener, ActionListener {
     private MainMenu mainMenu;
     private SnakeSong snakeSong;
 
-
-
     /**
-     * Constructs a SnakeController with the specified parameters.
+     * Constructs a SnakeController with specified game model, view, and menu.
      * 
-     * @param controller The snake controller.
-     * @param view       The snake view.
-     * @param mainMenu   The main menu of the game.
+     * @param controller The snake controller, manipulates based on user input.
+     * @param view       The snake view, updates as the model changes.
+     * @param mainMenu   The main menu of the game, navigating game states.
      */
     public SnakeController(ControlleableSnake controller, SnakeView view, MainMenu mainMenu) {
-        this.snakeModel = controller; // Use the 'controller' parameter
+        this.snakeModel = controller;
         this.snakeView = view;
         this.mainMenu = mainMenu;
-
         this.snakeSong = new SnakeSong();
+
         snakeView.addKeyListener(this);
         snakeView.setFocusable(true);
 
@@ -81,6 +79,13 @@ public class SnakeController implements KeyListener, ActionListener {
         }
     }
 
+    /**
+     * Handles key press events during the game's active state. Such as moving the
+     * snake in different directions, pausing the game, quitting the game, or
+     * returning to the main menu.
+     * 
+     * @param e Keyevent triggered by user interaction.
+     */
     private void handleActive(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
@@ -109,9 +114,10 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     /**
-     * Method for handling the start function.
+     * Method for handling the start of the game, start the theme song and set the
+     * state to Active game.
      * 
-     * @param e The KeyEvent.
+     * @param e The KeyEvent triggered when the user press space.
      */
     private void handleStart(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -120,11 +126,10 @@ public class SnakeController implements KeyListener, ActionListener {
         }
     }
 
-
     /**
-     * Method for handling the quit function.
+     * Method for handling the quit function, closing the game window.
      * 
-     * @param e The KeyEvent.
+     * @param e The KeyEvent triggered when pressed 'q'.
      */
     private void handleQuit(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_Q) {
@@ -134,9 +139,11 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     /**
-     * Method for handling the game over function.
+     * Method for handling the game over state, allowing the user to either resume
+     * the game, quit the game or return to the main menu.
      * 
-     * @param e The KeyEvent.
+     * @param e The KeyEvent triggered by the user, "m" for main menu, "q" for quit,
+     *          "Enter" for "restart game".
      */
     private void handleGameOver(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -150,27 +157,29 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     /**
-     * Method for showing the main menu, and also close the game window.
+     * Displays the main menu and hides the game view when the 'M' key is pressed.
+     * It sets the game state to START_GAME,
+     * making the main menu visible and hiding the current game view.
      * 
-     * @param e The KeyEvent.
+     * @param e The KeyEvent "m" triggered by the user.
      */
     private void showMainMenu(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_M) {
             if (mainMenu != null) {
                 mainMenu.setVisible(true);
                 snakeView.setVisible(false);
-                snakeView.closeWindow(); 
+                snakeView.closeWindow();
                 snakeModel.setGameScreen(GameState.START_GAME);
             }
         }
     }
-    
+
     /**
-     * Method for handling the pause function. 
+     * Method for handling the pause function, pausing the game and the theme song.
      * 
-     * @param e
+     * @param e The KeyEvent triggered by the user, "p" for pause.
      */
-    public void handlePause(KeyEvent e) {
+    private void handlePause(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_P) {
             snakeModel.setGameScreen(GameState.PAUSE_GAME);
             snakeSong.doPauseMidiSounds();
@@ -179,7 +188,8 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     /**
-     * Method for updating the timer delay.
+     * Updates the main game timer delay based on the current settings from the game
+     * model.
      */
     private void updateTimerDelay() {
         int newDelay = snakeModel.delayTimer();
@@ -190,7 +200,7 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     /**
-     * Method for updating the obstacle timer.
+     * Updates the obstacle timer delay to align with the current game state.
      */
     private void updateObstacleTimer() {
         int newDelay = snakeModel.obstacleTimer();
@@ -201,7 +211,7 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     /**
-     * Method for updating the poisonous apple timer.
+     * Updates the timer delay for generating poisonous apples in the game.
      */
     private void updatePappleTimer() {
         int newDelay = snakeModel.pappleTimer();
@@ -212,9 +222,10 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     /**
-     * Method for handling the clock tick delay when the game is active.
+     * Method for handling the clock tick delay when the game is active, updating
+     * the game state and the timer delay. (moving the snake).
      * 
-     * @param e The ActionEvent.
+     * @param e The ActionEvent triggered by the timer.
      */
     private void clockTickDelay(ActionEvent e) {
         if (e.getSource() == timer) {
@@ -227,10 +238,11 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     /**
-     * Method for handling the clock tick obstacle when the game is active, and
-     * the hard mode is selected.
+     * Handles updates for obstacle generation based on the obstacle timer ticks
+     * when the game
+     * is in hard mode and active.
      * 
-     * @param e The ActionEvent.
+     * @param e The ActionEvent triggered by the obstacle timer.
      */
     private void clockTickObstacle(ActionEvent e) {
         if (e.getSource() == timerObstacle && snakeModel.getGameState() == GameState.ACTIVE_GAME
@@ -242,11 +254,11 @@ public class SnakeController implements KeyListener, ActionListener {
     }
 
     /**
-     * Method for handling the clock tick poisonous apple when the game is active,
-     * and
-     * the hard mode is selected.
+     * Handles the timing for generating poisonous apples in the game when it is in
+     * hard mode
+     * and active.
      * 
-     * @param e The ActionEvent.
+     * @param e The ActionEvent triggered by the poisonous apple timer.
      */
     private void clockTickPapple(ActionEvent e) {
         if (e.getSource() == timerPapple && snakeModel.getGameState() == GameState.ACTIVE_GAME

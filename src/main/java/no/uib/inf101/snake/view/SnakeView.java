@@ -26,8 +26,7 @@ import no.uib.inf101.snake.model.GameState;
 
 /**
  * This class represents the visual component of the Snake game, displaying the
- * game board,
- * snake, and game states such as starting, pausing, and game over.
+ * game board, snake, and game states such as starting, pausing, and game over.
  */
 
 public class SnakeView extends JPanel {
@@ -39,6 +38,8 @@ public class SnakeView extends JPanel {
 
     /**
      * Constructs a SnakeView instance with a specified model for game data.
+     * It initializes the game interface, sets the color theme, and prepares the
+     * game view.
      * 
      * @param snakeModel The snake model to be displayed for visual representation.
      */
@@ -72,7 +73,8 @@ public class SnakeView extends JPanel {
     }
 
     /**
-     * Draw the game elements on the screen.
+     * Draws the game elements on the game board. This includes the snake, apples,
+     * and any obstacles, based on the positions from the snake model.
      * 
      * @param g2 context used for drawing the game elements.
      */
@@ -128,7 +130,7 @@ public class SnakeView extends JPanel {
                         (int) cellBounds.getHeight(), null);
 
             } else if (cell.value() == 'S') {
-                int inset = 2; // som over
+                int inset = 2;
                 g2.drawImage(snakeSymbol.getImage(),
                         (int) cellBounds.getX() + inset,
                         (int) cellBounds.getY() + inset,
@@ -170,9 +172,10 @@ public class SnakeView extends JPanel {
      * @param g2 context used for drawing the game over screen.
      */
     private void drawGameOverScreen(Graphics2D g2) {
-        // Create a gradient background
-        GradientPaint gradientPaint = new GradientPaint(0, 0, new Color(181, 201, 154, 128), 0, getHeight(),
-                new Color(113, 131, 85), true);
+        GradientPaint gradientPaint = new GradientPaint(
+                0, 0, new Color(181, 201, 154, 128),
+                0, getHeight(), new Color(113, 131, 85),
+                true);
         g2.setPaint(gradientPaint);
         g2.fillRect(0, 0, getWidth(), getHeight());
 
@@ -180,30 +183,38 @@ public class SnakeView extends JPanel {
         int shadowOffset = 2;
         Color shadowColor = Color.RED.darker();
         Color textColor = Color.WHITE;
-
         Font font = new Font("Arial", Font.BOLD, 24);
+
         g2.setFont(font);
 
-        // Draw the shadow text.
         g2.setColor(shadowColor);
         Inf101Graphics.drawCenteredString(
-                g2, "Game Over", 20 + shadowOffset, 75 + shadowOffset, this.getWidth() - 40, this.getHeight() - 540);
-        Inf101Graphics.drawCenteredString(
-                g2, "Your Final Score is: " + snakeModel.getscore(), 20 + shadowOffset, 125 + shadowOffset,
+                g2, "Game Over",
+                20 + shadowOffset, 75 + shadowOffset,
                 this.getWidth() - 40, this.getHeight() - 540);
         Inf101Graphics.drawCenteredString(
-                g2, "PRESS ENTER TO PLAY AGAIN", 20 + shadowOffset, 175 + shadowOffset, this.getWidth() - 40,
+                g2, "Your Final Score is: " + snakeModel.getscore(),
+                20 + shadowOffset, 125 + shadowOffset,
+                this.getWidth() - 40, this.getHeight() - 540);
+        Inf101Graphics.drawCenteredString(
+                g2, "PRESS ENTER TO PLAY AGAIN",
+                20 + shadowOffset, 175 + shadowOffset,
+                this.getWidth() - 40,
                 this.getHeight() - 540);
 
-        // Draw the text
         g2.setColor(textColor);
         Inf101Graphics.drawCenteredString(
-                g2, "Game Over", 20, 75, this.getWidth() - 40, this.getHeight() - 540);
-        Inf101Graphics.drawCenteredString(
-                g2, "Your Final Score is: " + snakeModel.getscore(), 20, 125, this.getWidth() - 40,
+                g2, "Game Over",
+                20, 75, this.getWidth() - 40,
                 this.getHeight() - 540);
         Inf101Graphics.drawCenteredString(
-                g2, "PRESS ENTER TO PLAY AGAIN", 20, 175, this.getWidth() - 40, this.getHeight() - 540);
+                g2, "Your Final Score is: " + snakeModel.getscore(),
+                20, 125, this.getWidth() - 40,
+                this.getHeight() - 540);
+        Inf101Graphics.drawCenteredString(
+                g2, "PRESS ENTER TO PLAY AGAIN",
+                20, 175, this.getWidth() - 40,
+                this.getHeight() - 540);
     }
 
     /**
@@ -214,22 +225,22 @@ public class SnakeView extends JPanel {
     private void drawStartscreen(Graphics2D g2) {
         ImageIcon originalIcon = new ImageIcon(Inf101Graphics.loadImageFromResources("/Snake.png"));
         Image originalImage = originalIcon.getImage();
-
         g2.drawImage(originalImage, 0, 0, getWidth(), getHeight(), this);
 
-        g2.setColor(new Color(0, 0, 0, 123)); // Semi-transparent black
+        Color overlayColor = new Color(0, 0, 0, 123);
         int overlayHeight = 150;
         int overlayYPosition = (getHeight() - overlayHeight) / 2;
+
+        g2.setColor(overlayColor);
         g2.fillRect(0, overlayYPosition, getWidth(), overlayHeight);
 
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, 40));
-        String message = "Press SPACE to begin!";
 
+        String message = "Press SPACE to begin!";
         FontMetrics metrics = g2.getFontMetrics();
         int x = (getWidth() - metrics.stringWidth(message)) / 2;
-        int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent(); // Adjust y to center the text
-                                                                                 // vertically
+        int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
 
         g2.drawString(message, x, y);
     }
@@ -240,11 +251,12 @@ public class SnakeView extends JPanel {
      * @param g2 context used for drawing the pause screen.
      */
     public void drawPauseScreen(Graphics2D g2) {
-        g2.setColor(new Color(0, 0, 0, 123));
         int overlayWidth = this.getWidth() - 80;
         int overlayHeight = 200;
         int overlayX = 40;
         int overlayY = (this.getHeight() - overlayHeight) / 2;
+
+        g2.setColor(new Color(0, 0, 0, 123));
         g2.fillRect(overlayX, overlayY, overlayWidth, overlayHeight);
 
         g2.setColor(Color.WHITE);
@@ -253,6 +265,7 @@ public class SnakeView extends JPanel {
 
         int textYStart = overlayY + 20;
         int lineHeight = g2.getFontMetrics().getHeight();
+
         Inf101Graphics.drawCenteredString(g2, "PAUSED", overlayX, textYStart, overlayWidth, lineHeight);
         Inf101Graphics.drawCenteredString(g2, "Press 'SPACE' to resume", overlayX, textYStart + lineHeight,
                 overlayWidth, lineHeight);
@@ -261,9 +274,10 @@ public class SnakeView extends JPanel {
     }
 
     /**
-     * Get the main frame of the game.
+     * Creates a new frame to the right of the main frame, displaying the keys
+     * that can be used to control the game.
      * 
-     * @return the main frame of the game.
+     * @return The main frame of the game.
      */
     public JFrame getFrame() {
         if (mainFrame == null) {
@@ -292,9 +306,9 @@ public class SnakeView extends JPanel {
             keys.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
             mainFrame.add(this, BorderLayout.CENTER);
+            panel.add(keys);
             mainFrame.add(panel, BorderLayout.EAST);
 
-            panel.add(keys);
             mainFrame.pack();
             mainFrame.setLocationRelativeTo(null);
             mainFrame.setVisible(true);
@@ -309,5 +323,4 @@ public class SnakeView extends JPanel {
     public void closeWindow() {
         mainFrame.setVisible(false);
     }
-
 }

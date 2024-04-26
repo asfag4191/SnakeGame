@@ -9,11 +9,9 @@ import no.uib.inf101.snake.snake.Snake;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class TestSnakeModel {
-
     private SnakeBoard snakeBoard;
     private SnakeModel snakeModel;
 
@@ -54,6 +52,28 @@ public class TestSnakeModel {
     }
 
     @Test
+    void testMoveIntoSelfEndsGame() {
+        snakeBoard = new SnakeBoard(20, 20);
+        Snake snake = new Snake('S', new CellPosition(5, 5));
+        snakeModel = new SnakeModel(snakeBoard, snake);
+
+        snakeBoard.set(new CellPosition(6, 5), 'S');
+        snakeModel.moveSnake(Direction.SOUTH); // moves the snake into one of their own cell
+        assertEquals(GameState.GAME_OVER, snakeModel.getGameState(), "Game should end after moving into itself");
+    }
+
+    @Test
+    public void testMoveIntoObjectEndsGame() {
+        SnakeBoard snakeBoard = new SnakeBoard(20, 20);
+        Snake snake = new Snake('S', new CellPosition(5, 5));
+        SnakeModel snakeModel = new SnakeModel(snakeBoard, snake);
+
+        snakeBoard.set(new CellPosition(6, 5), 'O');
+        snakeModel.moveSnake(Direction.SOUTH); // moves the snake into an obstacle
+        assertEquals(GameState.GAME_OVER, snakeModel.getGameState(), "Game should end after moving into an obstacle");
+    }
+
+    @Test
     void testSetDirection() {
         snakeBoard = new SnakeBoard(20, 20);
         Snake snake = new Snake('S', new CellPosition(5, 5));
@@ -69,16 +89,6 @@ public class TestSnakeModel {
         assertEquals(4, newHeadPos.row(), "The snake can't change direction.");
     }
 
-    @Test
-    void testMoveIntoSelfEndsGame() {
-        snakeBoard = new SnakeBoard(20, 20);
-        Snake snake = new Snake('S', new CellPosition(5, 5));
-        snakeModel = new SnakeModel(snakeBoard, snake);
-
-        snakeBoard.set(new CellPosition(6, 5), 'S');
-        snakeModel.moveSnake(Direction.SOUTH); // moves the snake into one of their own cell
-        assertEquals(GameState.GAME_OVER, snakeModel.getGameState(), "Game should end after moving into itself");
-    }
 
     @Test
     public void testMoveEatingApple() {
@@ -90,12 +100,12 @@ public class TestSnakeModel {
         snakeBoard.set(applePosition, 'A');
 
         assertEquals(1, snake.getLength(), "Initial snake length should be 1");
+        
         snakeModel.setDirection(Direction.NORTH);
         snakeModel.moveSnake(Direction.NORTH); // Simulate the snake moving north to eat the apple
 
         assertEquals(applePosition, snake.getHeadPos(), "Snake should move to the apple position");
         assertEquals(2, snake.getLength(), "Snake length should increase after eating an apple");
-
         assertEquals('S', snakeBoard.get(applePosition), "Original apple position should be cleared");
 
         // Verify that a new apple is generated and it's the only one on the board
@@ -135,7 +145,7 @@ public class TestSnakeModel {
         assertEquals(applePposition, snake.getHeadPos(),
                 "Snake should move to the apple position");
         assertEquals(1, snake.getLength(),
-                "Snake length should increase after eating an apple");
+                "Snake length should not increase after eating an poisinous apple");
 
         assertEquals('S', snakeBoard.get(applePposition), "Original poisinous apple position should be cleared");
 
@@ -151,27 +161,16 @@ public class TestSnakeModel {
             }
         }
 
-        assertEquals(1, applePCount, "There should be exactly one apple on the board");
-        assertNotNull(newApplePosition, "A new apple should be generated");
-        assertNotEquals(applePposition, newApplePosition, "New apple should be at a different position");
+        assertEquals(1, applePCount, "There should be exactly one poisinous apple on the board");
+        assertNotNull(newApplePosition, "A new poisinous apple should be generated");
+        assertNotEquals(applePposition, newApplePosition, "New poisinous apple should be at a different position");
 
         int score = snakeModel.getscore();
         assertEquals(-10, score, "The score should decrease by 10 after eating an poisinous apple.");
     }
 
-    @Test
-    public void testMoveIntoObjectEndsGame() {
-        SnakeBoard snakeBoard = new SnakeBoard(20, 20);
-        Snake snake = new Snake('S', new CellPosition(5, 5));
-        SnakeModel snakeModel = new SnakeModel(snakeBoard, snake);
-
-        snakeBoard.set(new CellPosition(6, 5), 'O');
-        snakeModel.moveSnake(Direction.SOUTH); // moves the snake into an obstacle
-        assertEquals(GameState.GAME_OVER, snakeModel.getGameState(), "Game should end after moving into an obstacle");
-    }
-
-    // https://www.baeldung.com/java-unit-test-private-methods source for reflection
-    // on test on private classes
+    // https://www.baeldung.com/java-unit-test-private-methods source for reflection,
+    // test on private classes
     @Test
     public void testGenerateApple() throws Exception {
         SnakeBoard snakeBoard = new SnakeBoard(5, 5);
@@ -196,12 +195,10 @@ public class TestSnakeModel {
                 }
             }
         }
-        assertNotNull(applePosition, "The apple position should not be null.");
+        assertNotNull(applePosition, "The apple has a position");
         assertEquals('A', snakeBoard.get(applePosition),
                 "The apple should be placed on the board at the apple's position.");
-
         assertEquals(1, appleCount, "There should be exactly one apple on the board");
-        assertNotNull(applePosition, "The apple has a position");
         assertTrue(applePosition.row() >= 0 && applePosition.row() < snakeBoard.rows(),
                 "The apple is within the board");
         assertTrue(applePosition.col() >= 0 && applePosition.col() < snakeBoard.cols(),
@@ -232,10 +229,9 @@ public class TestSnakeModel {
                 }
             }
         }
-
+        assertNotNull(obstaclePosition, "The obstacle has a position");
         assertTrue(obstacleCount >= 1 && obstacleCount <= 10,
                 "There should be between 1 and 10 obstacles on the board");
-        assertNotNull(obstaclePosition, "The obstacle has a position");
         assertTrue(obstaclePosition.row() >= 0 && obstaclePosition.row() < snakeBoard.rows(),
                 "The obstacles is within the board");
         assertTrue(obstaclePosition.col() >= 0 && obstaclePosition.col() < snakeBoard.cols(),
@@ -267,10 +263,10 @@ public class TestSnakeModel {
             }
         }
 
+        assertNotNull(papplePosition, "The poisonous apple should have a valid position");
         assertEquals('P', snakeBoard.get(papplePosition),
                 "The apple should be placed on the board at the poisinous apple's position.");
         assertEquals(1, applePCount, "There should be exactly one poisonous apple on the board");
-        assertNotNull(papplePosition, "The poisonous apple should have a valid position");
         assertTrue(papplePosition.row() >= 0 && papplePosition.row() < snakeBoard.rows(),
                 "The apple is within the row bounds of the board");
         assertTrue(papplePosition.col() >= 0 && papplePosition.col() < snakeBoard.cols(),

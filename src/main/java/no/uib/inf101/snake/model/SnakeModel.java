@@ -57,9 +57,8 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
 
     /**
      * Checks whether the snake's next move is legal. A move is considered illegal
-     * if it results
-     * in the snake moving into a wall, itself, or any objects if the game is in
-     * hard mode.
+     * if it results in the snake moving into a wall, itself, or any objects if the
+     * game is in hard mode.
      *
      * @param direction the intended direction of the snake's movement.
      * @return true if the move is legal, false otherwise.
@@ -107,8 +106,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
 
     /**
      * Checks if there is already an apple on the board, removes it if present, and
-     * then generates
-     * a new apple at a random position on the board.
+     * then generates a new apple at a random position on the board.
      *
      * @param c the character representing an apple, used for placing on the board.
      */
@@ -124,8 +122,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
 
     /**
      * Starts the hard mode features which include generating obstacles and a
-     * poisonous apple,
-     * along with setting their respective timers for updates.
+     * poisonous apple, along with setting their respective timers for updates.
      */
     private void startHardModeFeatures() {
         createObstacles('O');
@@ -136,7 +133,7 @@ public class SnakeModel implements ViewableSnakeView, ControlleableSnake {
 
     /**
      * Removes the obstacles from the board and generate new ones.
-     * Generates a random number from 1 to 10 for the new obstacles.
+     * Generates a obstacles which is a random number from 1 to 10.
      * 
      * @param c the character representing obstacles.
      */

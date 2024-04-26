@@ -75,7 +75,7 @@ public class TestItem {
         snakeBoard.set(new CellPosition(2, 2), 'O');
 
         Item item = new Item('A');
-        item.removeItem(snakeBoard, 'O');  // Remove all 'O' from the board
+        item.removeItem(snakeBoard, 'O'); 
 
         assertEquals('-', snakeBoard.get(new CellPosition(0, 1)), "Cell should be empty after removing the item.");
         assertEquals('-', snakeBoard.get(new CellPosition(2, 2)), "Cell should be empty after removing the item.");
