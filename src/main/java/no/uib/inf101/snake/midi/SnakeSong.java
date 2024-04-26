@@ -1,3 +1,5 @@
+//Fetched from tetris project
+//Owner Torstein Strømme. Fetched 07/04/2024
 package no.uib.inf101.snake.midi;
 
 import java.io.InputStream;
@@ -6,7 +8,8 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequencer;
 
 /**
- * This class is responsible for playing the snake song.
+ * This class is responsible for playing the snake song in the background.
+ * It implements the {@link Runnable} to be able to run the song in a separate thread.
  */
 
 public class SnakeSong implements Runnable {
@@ -42,6 +45,9 @@ public class SnakeSong implements Runnable {
         }
     }
 
+    /**
+     * Stops the song from playing.
+     */
     public void doStopMidiSounds() {
         try {
             if (this.sequencer == null || !this.sequencer.isRunning()) {
@@ -55,6 +61,9 @@ public class SnakeSong implements Runnable {
         this.sequencer = null;
     }
 
+    /**
+     * Pause the song from playing.
+     */
     public void doPauseMidiSounds() {
         try {
             if (this.sequencer == null || !this.sequencer.isRunning()) {
@@ -66,6 +75,9 @@ public class SnakeSong implements Runnable {
         }
     }
 
+    /**
+     * Unpause the song from playing.
+     */
     public void doUnpauseMidiSounds() {
         try {
             if (this.sequencer == null) {

@@ -1,5 +1,12 @@
 package no.uib.inf101.grid;
 
+//Fetched from tetris project
+// Owner Torstein Strømme. Fetched 07/04/2024
+/**
+ * Represents a grid of cells, where each cell contains a value of type E.
+ * 
+ * @param <E> the type of value stored in the grid
+ */
 public interface IGrid<E> extends GridDimension, Iterable<GridCell<E>> {
   
   /**

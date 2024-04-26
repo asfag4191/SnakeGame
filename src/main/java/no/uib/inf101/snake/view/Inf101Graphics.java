@@ -1,3 +1,5 @@
+//Fetched from tetris project
+//Owner Torstein Strømme. Fetched 07/04/2024
 package no.uib.inf101.snake.view;
 
 // University of Bergen INF101 helper methods for graphics with Swing.

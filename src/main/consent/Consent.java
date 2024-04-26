@@ -1,4 +1,4 @@
-package no.uib.inf101;
+package no.uib.inf101.consent;
 
 /**
  * Boolean variables to give or not give consent for the use of semesteroppgave
